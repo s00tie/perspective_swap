@@ -7,6 +7,7 @@ public class CameraManager : MonoBehaviour {
 	public float mainSplitWidth = 0.66f;
 	public float splitGap = 0.001f;
 	private bool showingAltCamera;
+	private int targetIndex = 0;
 
 	void Start() {
 		mainCamera.enabled = true;
@@ -15,11 +16,19 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	void Update() {
-		if (!showingAltCamera) {
-			if (CharacterManager.Instance.nearbyCharacters != null) {
-
+		if (CharacterManager.Instance.nearbyCharacters.Count > 0) {
+			if (!showingAltCamera) {
+				/* TODO: should probably start at closest */
+				targetIndex = 0;
+				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
+			} else if (Input.GetAxis("Target") != 0) {
+				targetIndex++;
+				if (targetIndex >= CharacterManager.Instance.nearbyCharacters.Count) {
+					targetIndex = 0;
+				}
+				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
 			}
-		} else {
+		} else if (showingAltCamera){
 			if (CharacterManager.Instance.nearbyCharacters == null) {
 				HideAltCamera();
 			}
@@ -35,9 +44,11 @@ public class CameraManager : MonoBehaviour {
 		altCameraViewport.x = altCameraX;
 		altCameraViewport.width = altCameraWidth;
 		altCamera.rect = altCameraViewport;
+		altCamera.transform.Translate(-altCamera.transform.position.x, -altCamera.transform.position.y, 0);// = new Vector3(0.0f, 0.0f, altCamera.transform.position.z);
 		Rect mainCameraViewport = mainCamera.rect;
 		mainCameraViewport.width = mainSplitWidth;
 		mainCamera.rect = mainCameraViewport;
+		showingAltCamera = true;
 	}
 
 	public void HideAltCamera() {
@@ -46,5 +57,6 @@ public class CameraManager : MonoBehaviour {
 		Rect mainCameraViewport = mainCamera.rect;
 		mainCameraViewport.width = 1.0f;
 		mainCamera.rect = mainCameraViewport;
+		showingAltCamera = false;
 	}
 }

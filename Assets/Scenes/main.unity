@@ -144,6 +144,89 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!1 &626910323
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 626910328}
+  - 33: {fileID: 626910327}
+  - 135: {fileID: 626910326}
+  - 23: {fileID: 626910325}
+  - 114: {fileID: 626910324}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Character
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &626910324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626910323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f35c0d37717632459b2578921c88e63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: .200000003
+  shareRadius: 3
+--- !u!23 &626910325
+Renderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626910323}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
+--- !u!135 &626910326
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626910323}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: .5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &626910327
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626910323}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &626910328
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626910323}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.78879786, y: 10.6990891, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &815276753
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,8 +278,8 @@ Camera:
   near clip plane: .300000012
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 100
+  orthographic: 1
+  orthographic size: 30
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -212,10 +295,10 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 815276753}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -6.87984848}
+  m_LocalPosition: {x: 1.19120264, y: 0, z: -6.87984848}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1925612474}
+  m_Father: {fileID: 0}
 --- !u!1 &916047965
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +307,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 916047966}
+  - 114: {fileID: 916047968}
+  - 114: {fileID: 916047967}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Globals
@@ -242,6 +327,36 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &916047967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 916047965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89500f88de918d45bdfd3408dc3f9f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1810652586}
+  altCamera: {fileID: 815276757}
+  mainSplitWidth: .660000026
+  splitGap: .00100000005
+--- !u!114 &916047968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 916047965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 878c5da832500074eb6f633d823c87c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characters: []
+  nearbyCharacters: []
+  playerCharacter: {fileID: 1587343821}
+  targetCharacter: {fileID: 0}
 --- !u!1 &1587343815
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,7 +372,7 @@ GameObject:
   - 114: {fileID: 1587343820}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Characters
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -337,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: .200000003
-  shareRadius: 3
+  shareRadius: 10
 --- !u!1 &1810652582
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,13 +499,13 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: .660000026
+    width: 1
     height: 1
   near clip plane: .300000012
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 100
+  orthographic: 1
+  orthographic size: 30
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -421,9 +536,10 @@ GameObject:
   - 33: {fileID: 1925612473}
   - 135: {fileID: 1925612472}
   - 23: {fileID: 1925612471}
+  - 114: {fileID: 1925612475}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Characters
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -475,8 +591,20 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1925612470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.19120264, y: 3.27317691, z: 0}
+  m_LocalPosition: {x: 1.19120264, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 815276758}
+  m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &1925612475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1925612470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f35c0d37717632459b2578921c88e63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: .200000003
+  shareRadius: 3

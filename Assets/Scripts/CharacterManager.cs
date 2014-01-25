@@ -14,10 +14,10 @@ public class CharacterManager : MonoBehaviour
 		}
 	}
 
-	public List<CharacterInfo> characters;
-	public List<CharacterInfo> nearbyCharacters;
-	public CharacterInfo playerCharacter;
-	public CharacterInfo targetCharacter;
+	public List<CharacterInfo> characters = null;
+	public List<CharacterInfo> nearbyCharacters = null;
+	public CharacterInfo playerCharacter = null;
+	public CharacterInfo targetCharacter = null;
 
 	void Start () {
 		GameObject[] foundCharacters = GameObject.FindGameObjectsWithTag("Character");
