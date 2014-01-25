@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Repository xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>MonoDevelop Add-in Repository</Name>
+  <Url>http://addins.monodevelop.com/Stable/Win32/2.8.2/root.mrep</Url>
+  <Addin>
+    <Url>MonoDevelop.StyleCop-1.0.1.6.mpack</Url>
+    <Addin>
+      <Id>StyleCop</Id>
+      <Namespace>MonoDevelop</Namespace>
+      <Name>StyleCop Support</Name>
+      <Version>1.0.1.6</Version>
+      <BaseVersion />
+      <Author>Alexander Jochum</Author>
+      <Copyright>APL 2.0</Copyright>
+      <Url />
+      <Description>Provides StyleCop support to MonoDevelop</Description>
+      <Category>IDE extensions</Category>
+      <Dependencies>
+        <AddinDependency>
+          <AddinId>Core</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+        <AddinDependency>
+          <AddinId>Ide</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+        <AddinDependency>
+          <AddinId>SourceEditor2</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+      </Dependencies>
+      <OptionalDependencies />
+      <Properties>
+        <Property name="DownloadSize">2380507</Property>
+      </Properties>
+    </Addin>
+  </Addin>
+</Repository>

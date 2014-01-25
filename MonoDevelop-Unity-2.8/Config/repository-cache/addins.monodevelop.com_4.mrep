@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Repository xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>MonoDevelop Add-in Repository (Beta channel)</Name>
+  <Url>http://addins.monodevelop.com/Beta/Win32/2.8.2/root.mrep</Url>
+  <Addin>
+    <Url>CommodiFusion.SlightlySharper-2.8.1.mpack</Url>
+    <Addin>
+      <Id>SlightlySharper</Id>
+      <Namespace>CommodiFusion</Namespace>
+      <Name>SlightlySharper</Name>
+      <Version>2.8.1</Version>
+      <BaseVersion />
+      <Author>CommodiFusion Ltd</Author>
+      <Copyright>BSD</Copyright>
+      <Url />
+      <Description>A keybinding add-in to make MonoDevelop behave slightly more like JetBrains Resharper or IDEA</Description>
+      <Category>IDE extensions</Category>
+      <Dependencies>
+        <AddinDependency>
+          <AddinId>::MonoDevelop.Ide</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+        <AddinDependency>
+          <AddinId>::MonoDevelop.Core</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+      </Dependencies>
+      <OptionalDependencies />
+      <Properties>
+        <Property name="DownloadSize">4225</Property>
+      </Properties>
+    </Addin>
+  </Addin>
+  <Addin>
+    <Url>MonoDevelop.HaxeBinding-0.2.2.mpack</Url>
+    <Addin>
+      <Id>HaxeBinding</Id>
+      <Namespace>MonoDevelop</Namespace>
+      <Name>Haxe Language Binding</Name>
+      <Version>0.4.1</Version>
+      <BaseVersion />
+      <Author>Joshua Granick</Author>
+      <Copyright>MIT X11</Copyright>
+      <Url />
+      <Description>Haxe Language Binding</Description>
+      <Category>Language bindings</Category>
+      <Dependencies>
+        <AddinDependency>
+          <AddinId>Core</AddinId>
+          <Version>3.0</Version>
+        </AddinDependency>
+        <AddinDependency>
+          <AddinId>Ide</AddinId>
+          <Version>3.0</Version>
+        </AddinDependency>
+        <AddinDependency>
+          <AddinId>SourceEditor2</AddinId>
+          <Version>3.0</Version>
+        </AddinDependency>
+      </Dependencies>
+      <OptionalDependencies />
+      <Properties>
+        <Property name="DownloadSize">58275</Property>
+      </Properties>
+    </Addin>
+  </Addin>
+  <Addin>
+    <Url>MonoDevelop.TechTalk.SpecFlow-1.8.1.0.mpack</Url>
+    <Addin>
+      <Id>TechTalk.SpecFlow</Id>
+      <Namespace>MonoDevelop</Namespace>
+      <Name>SpecFlow Support</Name>
+      <Version>1.8.1.0</Version>
+      <BaseVersion />
+      <Author>TechTalk, SineSignal</Author>
+      <Copyright>BSD</Copyright>
+      <Url>http://www.specflow.org</Url>
+      <Description>Integrates SpecFlow into the MonoDevelop IDE.</Description>
+      <Category>IDE extensions</Category>
+      <Dependencies>
+        <AddinDependency>
+          <AddinId>Core</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+        <AddinDependency>
+          <AddinId>Ide</AddinId>
+          <Version>2.8</Version>
+        </AddinDependency>
+      </Dependencies>
+      <OptionalDependencies />
+      <Properties>
+        <Property name="DownloadSize">4035591</Property>
+      </Properties>
+    </Addin>
+  </Addin>
+</Repository>

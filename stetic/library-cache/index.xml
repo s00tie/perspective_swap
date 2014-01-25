@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<LibraryCache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Members>
+    <LibraryInfo File="C:\Program Files (x86)\Unity\MonoDevelop\AddIns\MonoDevelop.GtkCore\libstetic.dll" Guid="d6cbe755-5874-4222-8e88-e47ef96cb132" Timestamp="2013-07-18T12:54:56Z" />
+    <LibraryInfo File="C:\Windows\assembly\GAC_32\System.Web\2.0.0.0__b03f5f7f11d50a3a\System.Web.dll" Guid="e7b50f71-8b0d-4a04-b4a5-c07c0b4b411c" Timestamp="2013-07-01T22:08:23.2146459Z" />
+    <LibraryInfo File="C:\Windows\Microsoft.NET\Framework\v2.0.50727\mscorlib.dll" Guid="b33397b8-58df-4c7d-bf1d-37ae62145152" Timestamp="2013-04-22T22:08:36.1953252Z" />
+    <LibraryInfo File="C:\Windows\assembly\GAC_MSIL\System.Web.Extensions\3.5.0.0__31bf3856ad364e35\System.Web.Extensions.dll" Guid="a318cb95-b519-4895-ae12-b7ed64a0bd73" Timestamp="2013-07-10T22:08:32.4499245Z" />
+    <LibraryInfo File="C:\Windows\assembly\GAC_MSIL\System.Web.Mvc\2.0.0.0__31bf3856ad364e35\System.Web.Mvc.dll" Guid="75497524-6f3e-4a03-a32b-ee18e6b4ea09" Timestamp="2013-07-31T14:37:25.1138553Z" />
+  </Members>
+</LibraryCache>
