@@ -8,11 +8,13 @@ public class CameraManager : MonoBehaviour {
 	public float splitGap = 0.001f;
 	private bool showingAltCamera;
 	private int targetIndex = 0;
+	private CharacterInfo oldTargetCharacter = null;
+	private bool readyToRetarget = true;
 
 	void Start() {
 		mainCamera.enabled = true;
 		altCamera.enabled = false;
-		showingAltCamera = false;
+		HideAltCamera();
 	}
 
 	void Update() {
@@ -21,12 +23,15 @@ public class CameraManager : MonoBehaviour {
 				/* TODO: should probably start at closest */
 				targetIndex = 0;
 				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
-			} else if (Input.GetAxis("Target") != 0) {
+			} else if (Input.GetAxis("Target") != 0 && readyToRetarget) {
 				targetIndex++;
 				if (targetIndex >= CharacterManager.Instance.nearbyCharacters.Count) {
 					targetIndex = 0;
 				}
 				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
+				readyToRetarget = false;
+			} else if (Input.GetAxis("Target") == 0 && !readyToRetarget) {
+				readyToRetarget = true;
 			}
 		} else if (showingAltCamera){
 			if (CharacterManager.Instance.nearbyCharacters == null) {
@@ -36,6 +41,11 @@ public class CameraManager : MonoBehaviour {
 	}
 	
 	public void ShowAltCamera(CharacterInfo targetCharacter, bool rightSide) {
+		Vector3 cameraShift = targetCharacter.transform.position;
+		if (oldTargetCharacter != null) {
+			cameraShift -= oldTargetCharacter.transform.position;
+		}
+		oldTargetCharacter = targetCharacter;
 		altCamera.enabled = true;
 		altCamera.transform.parent = targetCharacter.transform;
 		float altCameraX = mainSplitWidth + splitGap;
@@ -44,7 +54,7 @@ public class CameraManager : MonoBehaviour {
 		altCameraViewport.x = altCameraX;
 		altCameraViewport.width = altCameraWidth;
 		altCamera.rect = altCameraViewport;
-		altCamera.transform.Translate(-altCamera.transform.position.x, -altCamera.transform.position.y, 0);// = new Vector3(0.0f, 0.0f, altCamera.transform.position.z);
+		altCamera.transform.Translate(cameraShift);//(-altCamera.transform.position.x, -altCamera.transform.position.y, 0);// = new Vector3(0.0f, 0.0f, altCamera.transform.position.z);
 		Rect mainCameraViewport = mainCamera.rect;
 		mainCameraViewport.width = mainSplitWidth;
 		mainCamera.rect = mainCameraViewport;
@@ -54,6 +64,7 @@ public class CameraManager : MonoBehaviour {
 	public void HideAltCamera() {
 		altCamera.enabled = false;
 		altCamera.transform.parent = null;
+		altCamera.transform.position = new Vector3();
 		Rect mainCameraViewport = mainCamera.rect;
 		mainCameraViewport.width = 1.0f;
 		mainCamera.rect = mainCameraViewport;
