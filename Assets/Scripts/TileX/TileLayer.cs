@@ -73,8 +73,10 @@ public class TileLayer: MonoBehaviour {
 
 		GameObject obj = new GameObject();
 		obj.transform.parent = this.gameObject.transform;
-		obj.transform.position = new Vector3(x * parentMap.xStep, y * parentMap.yStep) + parentMap.startPoint;
+		obj.transform.position = new Vector3(x * parentMap.xStep + parentMap.xStep / 2, 
+		                                     y * parentMap.yStep + parentMap.yStep / 2) + parentMap.startPoint;
 		obj.name = "Tile_"+x.ToString()+"_"+y.ToString();
+		obj.transform.rotation = Quaternion.AngleAxis(ti.direction, Vector3.forward);
 
 		Tile t = obj.AddComponent<Tile>();
 		t.Init(x, y, ti, sortingOrder, sortingLayer);
@@ -115,6 +117,11 @@ public class TileLayer: MonoBehaviour {
 		for(int i=0; i<parentMap.width*parentMap.height; ++i) {
 			tiles.Add(null);
 		}
+	}
+
+	public Tile getTileAt(Vector3 pos) {
+		return this.getTile((int)Mathf.Floor((pos.x) / parentMap.xStep),
+		                    (int)Mathf.Floor((pos.y ) / parentMap.yStep));
 	}
 
 	public override string ToString () {
