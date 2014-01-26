@@ -17,12 +17,12 @@ public class CameraManager : MonoBehaviour {
 		mainCamera.enabled = true;
 		altCamera.enabled = false;
 		HideAltCamera();
-		mainCamera.transform.parent = CharacterManager.Instance.playerCharacter.transform;
-		mainCamera.transform.position = new Vector3(0, 0, -100);
+		//mainCamera.transform.parent = CharacterManager.Instance.playerCharacter.transform;
+		//mainCamera.transform.position = new Vector3(0, 0, -100);
 	}
 
 	void Update() {
-		if (mainCamera.transform.parent != CharacterManager.Instance.playerCharacter.transform)
+		/*if (mainCamera.transform.parent != CharacterManager.Instance.playerCharacter.transform)
 		{
 			mainCamera.transform.parent = CharacterManager.Instance.playerCharacter.transform;
 			mainCamera.transform.position = new Vector3(0, 0, -100);
@@ -33,7 +33,7 @@ public class CameraManager : MonoBehaviour {
 		mainCamera.transform.position = mainCameraPos;
 		Vector3 altCameraPos = altCamera.transform.position;
 		altCameraPos.z = -100;
-		altCamera.transform.position = altCameraPos;
+		altCamera.transform.position = altCameraPos;*/
 
 		if (CharacterManager.Instance.nearbyCharacters.Count > 0) {
 			if (!showingAltCamera) {
@@ -101,7 +101,7 @@ public class CameraManager : MonoBehaviour {
 		}
 		oldTargetCharacter = targetCharacter;
 		altCamera.enabled = true;
-		altCamera.transform.parent = targetCharacter.transform;
+		//altCamera.transform.parent = targetCharacter.transform;
 		float altCameraX = mainSplitWidth + splitGap;
 		float altCameraWidth = 1 - altCameraX;
 		Rect altCameraViewport = altCamera.rect;
@@ -118,7 +118,7 @@ public class CameraManager : MonoBehaviour {
 
 	public void HideAltCamera() {
 		altCamera.enabled = false;
-		altCamera.transform.parent = null;
+		//altCamera.transform.parent = null;
 		altCamera.transform.position = new Vector3();
 		Rect mainCameraViewport = mainCamera.rect;
 		mainCameraViewport.width = 1.0f;
