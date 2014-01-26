@@ -6030,7 +6030,7 @@ public class iTween : MonoBehaviour{
 	/// </returns>
 	public static GameObject CameraFadeAdd(Texture2D texture, int depth){
 		if(cameraFade){
-			return null;
+			return cameraFade;
 		}else{			
 			//establish colorFade object:
 			cameraFade = new GameObject("iTween Camera Fade");
@@ -6053,7 +6053,7 @@ public class iTween : MonoBehaviour{
 	/// </returns>
 	public static GameObject CameraFadeAdd(Texture2D texture){
 		if(cameraFade){
-			return null;
+			return cameraFade;
 		}else{			
 			//establish colorFade object:
 			cameraFade = new GameObject("iTween Camera Fade");
@@ -6073,7 +6073,7 @@ public class iTween : MonoBehaviour{
 	/// </returns>
 	public static GameObject CameraFadeAdd(){
 		if(cameraFade){
-			return null;
+			return cameraFade;
 		}else{			
 			//establish colorFade object:
 			cameraFade = new GameObject("iTween Camera Fade");

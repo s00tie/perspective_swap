@@ -11,15 +11,21 @@ class AIController: MonoBehaviour {
 
 	public int wanderRadius = 1;
 	public float wanderInterval = 5f;
+	public bool enableWandering = true;
 
 	float currentTime;
 	bool moveReady;
 	List<Vector3> routePoints;
 	Vector3 targetPos;
+	
+	int currentTileX = 0, currentTileY = 0;
+
+	Action finishCallback = null;
 
 	void Start () {
 		currentTime = 0;
 		moveReady = true;
+		characterInfo = GetComponent<CharacterInfo>();
 	}
 
 	bool isClose(Vector3 p1, Vector3 p2) {
@@ -34,25 +40,31 @@ class AIController: MonoBehaviour {
 		int tx = UnityEngine.Random.Range(-wanderRadius, wanderRadius);
 		int ty = UnityEngine.Random.Range(-wanderRadius, wanderRadius);
 
-		int currentTileX = 0, currentTileY = 0;
 		tileMap.getTileCoordinateAt(characterInfo.gameObject.transform.position, ref currentTileX, ref currentTileY);
+		this.nagivateTo(currentTileX + tx, currentTileY + ty);
+	}
 
+	void onWanderFinished() {
+		moveReady = true;
+	}
+
+	public void nagivateTo(int x, int y, Action cb = null) {
+		tileMap.getTileCoordinateAt(characterInfo.gameObject.transform.position, ref currentTileX, ref currentTileY);
 		Tile[] route = tileMap.AStar(currentTileX, currentTileY,
-		       	    	    	     currentTileX + tx, currentTileY + ty,
-		        	    	         this.characterInfo.tag,
-		                    	  	 1);
-
+		                             x, y,
+		                             this.characterInfo.tag,
+		                             1);
+		
 		if(route.Length > 0) {
 			moveReady = false;
 			routePoints = new List<Vector3>();
 			foreach(Tile t in route) {
 				routePoints.Add (t.gameObject.transform.position);
 			}
-			string d = "";
-			foreach(Vector3 pos in routePoints) {
-				d += "(" + pos.ToString() + ") -> ";
-			}
-			Debug.Log(d);
+			if(routePoints.Count > 0)
+				targetPos = routePoints[routePoints.Count - 1];
+
+			finishCallback = cb;
 			/*
 			iTween.MoveTo(characterInfo.gameObject,
 			              iTween.Hash("path", routePoints.ToArray(), 
@@ -62,10 +74,6 @@ class AIController: MonoBehaviour {
 			            			  "easetype", iTween.EaseType.linear));
 */
 		}
-	}
-
-	void onWanderFinished() {
-		moveReady = true;
 	}
 	
 	public static void MoveTo(Vector3 target_pos, float speed, GameObject go) {
@@ -126,22 +134,24 @@ class AIController: MonoBehaviour {
 					routePoints.RemoveAt (routePoints.Count - 1);
 				} else {
 					moveReady = true;
+					if(finishCallback != null)
+						finishCallback();
 				}
 
 			}
 		}
-
 	}
 
 	void Update()  {
-		currentTime += Time.deltaTime;
-		if(currentTime >= this.wanderInterval) {
-			if(this.moveReady) 
-				this.wander();
-
-			currentTime = 0f;
+		if(enableWandering) {
+			currentTime += Time.deltaTime;
+			if(currentTime >= this.wanderInterval) {
+				if(this.moveReady) 
+					this.wander();
+					
+				currentTime = 0f;
+			}
 		}
-
 		this.updateMovement();
 	}
 

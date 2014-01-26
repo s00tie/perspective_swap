@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour {
 	public int tileMoveX, tileMoveY;
 	
 	void Start () {
-		playerCharacter = CharacterManager.Instance.playerCharacter.gameObject;
 		characterInfo = playerCharacter.GetComponent<CharacterInfo>();
 		if (characterInfo ==  null) {
 			enabled = false;
@@ -24,26 +23,25 @@ public class PlayerController : MonoBehaviour {
 			tileMap.getTileCoordinateAt(playerCharacter.transform.position, ref currentTileX, ref currentTileY);
 		targetTileX = currentTileX;
 		targetTileY = currentTileY;
-
-		tileMap.showLayerInGroupWithTag(CharacterManager.Instance.playerCharacter.tag, 1, true);
+		tileMap.showLayerInGroupWithTag(characterInfo.tag, 1, true);
 	}
 
 	void Update () {
-		playerCharacter = CharacterManager.Instance.playerCharacter.gameObject;
 		CheckInput();
 	}
 
 	void CheckObjectInteraction() {
 		bool adjacentSpecial;
-		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
-		characterInfo.interactionBubble.SetActive(false);
+		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, characterInfo.tileLayer);
+		if(characterInfo.interactionBubble != null)
+			characterInfo.interactionBubble.SetActive(false);
 		switch (characterInfo.occupation) {
 		case CharacterInfo.Occupation.BREAK:
 			if(frontTile.isBreakable) {
 				characterInfo.interactionBubble.SetActive(true);
 				if (Input.GetAxis("Touch") != 0) {
 					TileHolder.Instance.SwapInNewTile(0, currentTileX + tileMoveX, currentTileY + tileMoveY);
-					Tile fixedTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
+					Tile fixedTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, characterInfo.tileLayer);
 					fixedTile.isBlock = false;
 					fixedTile.isBreakable = false;
 					fixedTile.isClimbable = false;
@@ -73,6 +71,31 @@ public class PlayerController : MonoBehaviour {
 			}
 			break;
 		}
+
+		string isEnd = tileMap.getAttributeAt(currentTileX, currentTileY, "isend");
+		if(isEnd.Length > 0) {
+			if(!GameStatus.ended) {
+				iTween.CameraFadeAdd();
+				iTween.CameraFadeTo(iTween.Hash("amount", 1.0f, "time", 20f/*, "oncomplete", "OnCamFadeComplete", "oncompletetarget", this.gameObject*/));
+				GameStatus.ended = true;
+
+				foreach(CharacterInfo character in CharacterManager.Instance.characters) {
+					AIController npc = character.gameObject.GetComponent<AIController>();
+					if(npc != null) {
+						npc.characterInfo.moveSpeed = 2;
+						npc.nagivateTo(currentTileX, currentTileY, () => {
+							GameStatus.PeopleSaved += 1;
+						});
+						npc.wanderRadius = 0;
+						npc.enableWandering = false;
+					}
+				}
+			}
+		}
+	}
+
+	void OnCamFadeComplete() {
+		iTween.CameraFadeTo(iTween.Hash("amount", -1.0f, "time", 0.5f));
 	}
 
 	bool isClose(Vector3 p1, Vector3 p2) {
@@ -83,7 +106,7 @@ public class PlayerController : MonoBehaviour {
 	private void CheckInput() {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
-			bool closeToDest = isClose (this.playerCharacter.transform.position, tileMap.getTile(targetTileX, targetTileY, 0).gameObject.transform.position);
+			bool closeToDest = isClose (this.playerCharacter.transform.position, tileMap.getTile(targetTileX, targetTileY, characterInfo.tileLayer).gameObject.transform.position);
 			if(targetTileY == currentTileY && closeToDest) {
 				if(Input.GetAxis("Horizontal") < 0) {
 					tx = (int)Mathf.Clamp(currentTileX - 1, 0, 9999);
@@ -107,8 +130,7 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 			Tile t = tileMap.getTile(tx, ty, 0);
-			Tile ta = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
-			if(!t.isBlock) {
+			if(!tileMap.isBlockAt(tx, ty)) {
 				targetTileX = tx;
 				targetTileY = ty;
 

@@ -11,43 +11,64 @@ class GUIController: MonoBehaviour {
 
 	public void OnGUI() {
 
-		if(playerController != null && lifeIndicator != null) {
 
-			float w = (lifeIndicator.width) * 3;
-			GUI.Box (new Rect(10f, 10f, w, lifeIndicator.height), "");
+		if(GameStatus.ended) {
 
-			float x = 10f;
-			float y = 10f;
+			GUILayout.BeginArea(new Rect(Screen.width / 2 - 200,
+			                             Screen.height / 2- 100,
+			                             400,
+			                             200), "", "box");
 
-			for(int i=0; i<playerController.lifeCount; ++i) {
-				GUI.DrawTexture(new Rect(x, y, lifeIndicator.width, lifeIndicator.height),
-				                lifeIndicator);
-				x += lifeIndicator.width;
-			}
-
-			GUILayout.BeginArea(new Rect(0, Screen.height - 100, 300, 100), "", "box");
-			if(GUILayout.Button("A*")) {
-				playerController.tileMap.AStar(playerController.currentTileX, playerController.currentTileY,
-				                               2, 18,
-				                               "",
-				                               1);
-			}
+			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("layer tag");
-			tagName = GUILayout.TextField(tagName);
+
+			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+			GUI.skin.label.fontSize = 40;
+			GUILayout.Label("Conguratulations !!!!");
+
 			GUILayout.EndHorizontal();
 
+			
+			GUI.skin.label.fontSize = 30;
+			GUILayout.Label(" People Saved = " + GameStatus.PeopleSaved.ToString());
+
+			
+			GUILayout.FlexibleSpace();
+			GUILayout.FlexibleSpace();
+			GUILayout.FlexibleSpace();
+			GUILayout.FlexibleSpace();
+
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("layer id");
-			string t = GUILayout.TextField(layerId.ToString());
-			layerId = int.Parse(t);
+			GUILayout.FlexibleSpace();
+			if(GUILayout.Button("Exit", GUILayout.Width(120))) {
+
+			}
+			GUILayout.FlexibleSpace();
 			GUILayout.EndHorizontal();
 
-			if(GUILayout.Button ("Layer layers")) {
-				playerController.tileMap.showLayerInGroupWithTag(tagName, layerId);
-			}
+			GUILayout.EndVertical();
+
 
 			GUILayout.EndArea();
+
+
+		} else {
+
+			if(playerController != null && lifeIndicator != null) {
+				
+				float w = (lifeIndicator.width) * 3;
+				GUI.Box (new Rect(10f, 10f, w, lifeIndicator.height), "");
+				
+				float x = 10f;
+				float y = 10f;
+				
+				for(int i=0; i<playerController.lifeCount; ++i) {
+					GUI.DrawTexture(new Rect(x, y, lifeIndicator.width, lifeIndicator.height),
+					                lifeIndicator);
+					x += lifeIndicator.width;
+				}
+				
+			}
 		}
 
 	}

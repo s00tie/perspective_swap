@@ -9,6 +9,7 @@ public class CharacterInfo : MonoBehaviour
 
 	public string tag = "";
 	public TileMap tileMap;
+	public int tileLayer = 0;
 	public GameObject interactionBubble = null;
 	public bool beingSpecial = false;
 
@@ -22,9 +23,8 @@ public class CharacterInfo : MonoBehaviour
 	}
 	public Occupation occupation = Occupation.BREAK;
 
-	public void Start() {
-		if(tileMap != null)
-			tileMap.showLayerInGroupWithTag(this.tag, 1);
-	}
+	public bool makeScreenBlack = false;
+	public float screenBlackAlphaThreshold = 0.3f;
+	public float screenBlackDistance = 3f;
 }
 

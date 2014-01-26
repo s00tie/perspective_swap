@@ -20,7 +20,7 @@ public class TileHolder : MonoBehaviour
 
 	public void SwapInNewTile(int listIndex, int x, int y) {
 		tileMap.getTile(x, y, 0).renderer.enabled = false;
-		GameObject.Instantiate(dynamicTiles[listIndex], tileMap.startPoint + new Vector3(x * tileMap.xStep + (tileMap.xStep / 2), y * tileMap.yStep + (tileMap.yStep / 2), 0), Quaternion.identity);
+		GameObject.Instantiate(dynamicTiles[listIndex], tileMap.startPoint + new Vector3(x * tileMap.xStep + (tileMap.xStep / 2), y * tileMap.yStep + (tileMap.yStep / 2), CharacterManager.Instance.playerCharacter.tileLayer), Quaternion.identity);
 	}
 
 }

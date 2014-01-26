@@ -35,6 +35,9 @@ public class CameraManager : MonoBehaviour {
 		altCameraPos.z = -100;
 		altCamera.transform.position = altCameraPos;*/
 
+		mainCamera.GetComponent<CameraFollowCharacter>().targetCharacter = CharacterManager.Instance.playerCharacter;
+		altCamera.GetComponent<CameraFollowCharacter>().targetCharacter = CharacterManager.Instance.targetCharacter;
+
 		if (CharacterManager.Instance.nearbyCharacters.Count > 0) {
 			if (!showingAltCamera) {
 				/* TODO: should probably start at closest */
@@ -75,6 +78,7 @@ public class CameraManager : MonoBehaviour {
 				if (targetIndex >= CharacterManager.Instance.nearbyCharacters.Count) {
 					targetIndex = 0;
 				}
+				CharacterManager.Instance.targetCharacter = CharacterManager.Instance.nearbyCharacters[targetIndex];
 				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
 				readyToRetarget = false;
 			} else if (Input.GetAxis("Target") == 0 && !readyToRetarget) {

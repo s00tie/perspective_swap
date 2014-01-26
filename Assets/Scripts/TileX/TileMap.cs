@@ -6,9 +6,16 @@ using System.Collections.Generic;
 
 public class TileMap: MonoBehaviour {
 
+	TileLayer[] layerCache = null;
 	public TileLayer[] layers { 
 		get {
-			return this.gameObject.GetComponentsInChildren<TileLayer>();
+			if(Application.isEditor)
+				return this.gameObject.GetComponentsInChildren<TileLayer>();
+			else {
+				if(layerCache == null)
+					layerCache = this.gameObject.GetComponentsInChildren<TileLayer>();
+				return layerCache;
+			}
 		}
 	}
 
@@ -147,25 +154,46 @@ public class TileMap: MonoBehaviour {
 		foreach(TileLayer layer in layers) {
 			layer.gameObject.layer = 10;
 			if(layer.layerGroup == groupId) {
+				Debug.Log (layer.layerTag + " " + tag);
 			    if(layer.layerTag == tag) {
 					if (mainCamera) {
 						//layer.visible = true;
-						layer.gameObject.layer = LayerMask.NameToLayer("main_camera_render");;
-						foreach(Transform layerChild in layer.transform)
-						{
-							layerChild.gameObject.layer = LayerMask.NameToLayer("main_camera_render");
+						layer.gameObject.layer = LayerMask.NameToLayer("main_camera_render");
+						foreach(GameObject t in layer.tiles) {
+							t.layer = LayerMask.NameToLayer("main_camera_render");
 						}
+					//	for(//foreach(Transform layerChild in layer.transform.childCount)
+					//	{
+					//		layerChild.gameObject.layer = LayerMask.NameToLayer("main_camera_render");
+					//	}
 					}else {
-						//layer.visible = false;
-						layer.gameObject.layer = LayerMask.NameToLayer("alt_camera_render");;
+						//layer.visible = true;
+						layer.gameObject.layer = LayerMask.NameToLayer("alt_camera_render");
+						foreach(GameObject t in layer.tiles) {
+							t.layer = LayerMask.NameToLayer("alt_camera_render");
+						}
+						/*
 						foreach(Transform layerChild in layer.transform)
 						{
 							layerChild.gameObject.layer = LayerMask.NameToLayer("alt_camera_render");
-						}
+						}*/
 					}
 
 				} else {
-					layer.gameObject.layer = LayerMask.NameToLayer("no_camera_render");
+					//layer.visible = false;
+					//layer.gameObject.layer = LayerMask.NameToLayer("no_camera_render");
+
+					foreach(GameObject t in layer.tiles) {
+						if (CharacterManager.Instance.targetCharacter) {
+							if (mainCamera && !layer.layerTag.Equals(CharacterManager.Instance.targetCharacter.tag)) {//(mainCamera && t.layer != LayerMask.NameToLayer("alt_camera_render")) {
+								t.layer = LayerMask.NameToLayer("no_camera_render");
+							} 
+						}
+						if (!mainCamera && !layer.layerTag.Equals(CharacterManager.Instance.playerCharacter.tag)) {//(!mainCamera && t.layer != LayerMask.NameToLayer("main_camera_render")) {
+							t.layer = LayerMask.NameToLayer("no_camera_render");
+						}
+					}
+					/*
 					foreach(Transform layerChild in layer.transform)
 					{
 						if (mainCamera && layer.gameObject.layer != LayerMask.NameToLayer("alt_camer_render")) {
@@ -173,7 +201,7 @@ public class TileMap: MonoBehaviour {
 						} else if (!mainCamera &&mainCamera && layer.gameObject.layer != LayerMask.NameToLayer("main_camer_render")) {
 							layerChild.gameObject.layer = LayerMask.NameToLayer("no_camera_render");
 						}
-					}
+					}*/
 				}
 			}
 		}
@@ -203,18 +231,10 @@ public class TileMap: MonoBehaviour {
 
 	Tile checkAStarNode(List<Tile> c, int x, int y, int tx, int ty, string tag, int groupId) {
 		Tile t;
-		foreach(TileLayer layer in this.layers) {
-			if(layer.layerGroup == groupId) {
-				if(layer.layerTag == tag) {
-					t = layer.getTile(x, y);
-					if(t != null && t.isBlock)
-						return null;
-				}
-			}
-		}
-		t = this.getTile(x, y, 0);
-		if(t != null && t.isBlock)
+		if(this.isBlockAt(x, y))
 			return null;
+
+		t = this.getTile(x, y, 0);
 
 		if(c.Contains(t))
 			return null;
@@ -222,6 +242,27 @@ public class TileMap: MonoBehaviour {
 		return t;
 	}
 
+
+	public string getAttributeAt(int x, int y, string key) {
+		foreach(TileLayer layer in this.layers) {
+			Tile t = layer.getTile(x, y);
+			string v = t.getAttribute(key);
+			if(v.Length > 0)
+				return v;
+		}
+		return "";
+	}
+
+	public bool isBlockAt(int x, int y) {
+		foreach(TileLayer layer in this.layers) {
+			if(layer.visible && layer.enabled) {
+				Tile t = layer.getTile(x, y);
+				if(t.isBlock)
+					return true;
+			}
+		}
+		return false;
+	}
 
 	bool addAdjacentNodes(List<Tile> t, List<Tile> c, Tile from, int x, int y, int tx, int ty, string tag, int groupId) {
 		if(t.Count > 100)
@@ -273,6 +314,9 @@ public class TileMap: MonoBehaviour {
 		   startY == endY) {
 			return new Tile[] { };
 		}
+		if(isBlockAt(endX, endY)) {
+			return new Tile[] { };
+		}
 		List<Tile> currentTiles = new List<Tile>();
 		List<Tile> closeNodes = new List<Tile>();
 
@@ -289,17 +333,13 @@ public class TileMap: MonoBehaviour {
 			cx = currentTile.x;
 			cy = currentTile.y;
 		}
-		Debug.Log(startX.ToString() + " " + startY.ToString() + " to " + endX.ToString() + " " + endY.ToString());
-
 		Tile end = this.getTile(endX, endY, 0);
 		Tile from = end.astarFrom;
 		List<Tile> result = new List<Tile>();
 		result.Add (end);
-		Debug.Log(from);
 		while((from.x != startX || from.y != startY)) {
 			result.Add (from);
 			from = from.astarFrom;
-
 		}
 		//result.Add (from);
 		//result.Reverse();
