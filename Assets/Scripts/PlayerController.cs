@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour {
 				characterInfo.interactionBubble.SetActive(true);
 				if (Input.GetAxis("Touch") != 0) {
 					TileHolder.Instance.SwapInNewTile(0, currentTileX + tileMoveX, currentTileY + tileMoveY);
-					Tile fixedTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
+					Tile fixedTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, characterInfo.tileLayer);
 					fixedTile.isBlock = false;
 					fixedTile.isBreakable = false;
 					fixedTile.isClimbable = false;
