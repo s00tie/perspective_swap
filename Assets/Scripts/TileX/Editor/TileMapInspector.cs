@@ -70,7 +70,7 @@ class TileMapInspector: Editor {
 						int columns = tm.mapWidth / tm.tileWidth;
 						for(int i=0; i<rows; ++i) {
 							for(int j=0; j<columns; ++j) {
-								layer.addTile(i, j, ti);
+								layer.addTile(j, i, ti);
 							}
 						}
 					}

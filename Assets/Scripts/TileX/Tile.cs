@@ -37,7 +37,11 @@ public class Tile: MonoBehaviour {
 	public List<TileAttribute> attributes = new List<TileAttribute>();
 
 	public bool isBlock = false;
-	public bool isHole = false;
+	public bool isFloatable = false;
+	public bool isBreakable = false;
+	public bool isClimbable = false;
+	public bool isMoveable = false;
+	public bool isTunnelable = false;
 
 	bool _visible;
 	public bool visible {

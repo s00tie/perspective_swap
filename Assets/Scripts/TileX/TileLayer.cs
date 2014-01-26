@@ -69,6 +69,11 @@ public class TileLayer: MonoBehaviour {
 	}
 
 	public Tile addTile(int x, int y, TileInfo ti) {
+		
+		int idx = y * parentMap.width + x;
+		if(!(idx >= 0 && idx <  this.tiles.Count)) {
+			return null;
+		}
 		this.removeTile(x, y);
 
 		GameObject obj = new GameObject();
@@ -82,15 +87,18 @@ public class TileLayer: MonoBehaviour {
 		t.Init(x, y, ti, sortingOrder, sortingLayer);
 		t.parentLayer = this;
 
-		this.tiles[y * parentMap.width + x] = obj;
+		this.tiles[idx] = obj;
 		return t;
 	}
 
 	public void removeTile(int x, int y) {
-		GameObject t = this.tiles[y * parentMap.width + x];
-		if(t != null) { 
-			DestroyImmediate(t);
-			this.tiles[y * parentMap.width + x] = null;
+		int idx = y * parentMap.width + x;
+		if(idx >= 0 && idx <  this.tiles.Count) {
+			GameObject t = this.tiles[idx];
+			if(t != null) { 
+				DestroyImmediate(t);
+				this.tiles[y * parentMap.width + x] = null;
+			}
 		}
 	}
 

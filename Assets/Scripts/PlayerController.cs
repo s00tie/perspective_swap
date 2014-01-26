@@ -47,21 +47,21 @@ public class PlayerController : MonoBehaviour {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
 			if(targetTileY == currentTileY) {
-				if(Input.GetKey(KeyCode.LeftArrow)) {
+				if(Input.GetAxis("Horizontal") < 0) {
 					tx = (int)Mathf.Clamp(currentTileX - 1, 0, 9999);
-				} else if(Input.GetKey(KeyCode.RightArrow)) {
+				} else if(Input.GetAxis("Horizontal") > 0) {
 					tx = (int)Mathf.Clamp(currentTileX + 1, 0, tileMap.width - 1);
 				}
 			}
 			if(targetTileX == currentTileX) {
-				if(Input.GetKey(KeyCode.UpArrow)) {
+				if(Input.GetAxis("Vertical") > 0) {
 					ty = (int)Mathf.Clamp(currentTileY + 1, 0, 9999);
-				} else if(Input.GetKey(KeyCode.DownArrow)) {
+				} else if(Input.GetAxis("Vertical") < 0) {
 					ty = (int)Mathf.Clamp(currentTileY - 1, 0, tileMap.height - 1);
 				}
 			}
 			Tile t = tileMap.getTile(tx, ty, 0);
-			if(!t.isBlock && !t.isHole) {
+			if(!t.isBlock && !t.isBreakable && !t.isFloatable && !t.isClimbable && !t.isTunnelable) {
 				targetTileX = tx;
 				targetTileY = ty;
 
