@@ -25,7 +25,7 @@ public class TileMap: MonoBehaviour {
 
 	public void Awake() {
 		foreach(Tileset ts in this.tilesets) {
-			ts.CreateTileSprites();
+			ts.CreateTileSprites(this);
 		}
 	}
 
@@ -51,6 +51,12 @@ public class TileMap: MonoBehaviour {
 		get {
 			return this.gameObject.transform.position - new Vector3((float)this.mapWidth / this.pixelPerUnit / 2,
 			                                                        (float)this.mapHeight / this.pixelPerUnit / 2);
+		}
+	}
+
+	public Vector3 endPoint {
+		get {
+			return this.startPoint + new Vector3(this.worldWidth, this.worldHeight);
 		}
 	}
 
@@ -97,6 +103,28 @@ public class TileMap: MonoBehaviour {
 		}
 	}
 
+	public Tile getTileAt(Vector3 pos, int layerId) {
+		TileLayer[] layers = this.layers;
+		if(layerId >= 0 && layerId < layers.Length) {
+			return layers[layerId].getTileAt(pos - this.startPoint);
+		}
+		return null;
+	}
+
+	public Tile getTile(int x, int y, int layerId) {
+		TileLayer[] layers = this.layers;
+		if(layerId >= 0 && layerId < layers.Length) {
+			return layers[layerId].getTile(x, y);
+		}
+		return null;
+	}
+
+	public void getTileCoordinateAt(Vector3 pos, ref int x, ref int y) {
+		Vector3 dis = pos - this.startPoint;
+		x = (int)Mathf.Floor((dis.x) / this.xStep);
+		y = (int)Mathf.Floor((dis.y) / this.yStep);
+	}
+	
 	public SpriteRenderer previewTile {
 		get {
 			TilePreview tp = this.gameObject.GetComponentInChildren<TilePreview>();

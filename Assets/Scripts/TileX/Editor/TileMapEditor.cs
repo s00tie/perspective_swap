@@ -97,12 +97,12 @@ class TileMapEditor: EditorWindow {
 					GUILayout.EndHorizontal();
 
 					if(GUILayout.Button("Generate Tiles")) {
-						ts.CreateTileSprites();
+						ts.CreateTileSprites(selectedMap);
 					}
-				/*	GUILayout.BeginHorizontal();
+					GUILayout.BeginHorizontal();
 					GUILayout.FlexibleSpace();
 					isErase = GUILayout.Toggle(isErase, "Eraser",  GUILayout.Width(60));
-					GUILayout.EndHorizontal();*/
+					GUILayout.EndHorizontal();
 					
 					GUILayout.EndVertical();
 				}
@@ -115,7 +115,9 @@ class TileMapEditor: EditorWindow {
 						GUILayout.BeginHorizontal();
 						ti.editorExpanded = EditorGUILayout.Foldout(ti.editorExpanded, "Tile Attributes");
 
-						if(GUILayout.Button("New Attribute", "label", GUILayout.Width(120))) {
+						ti.isHole = GUILayout.Toggle(ti.isHole, "Is Hole  |", GUILayout.Width(80));
+						ti.isBlock = GUILayout.Toggle(ti.isBlock, "Is Block  |", GUILayout.Width(80));
+						if(GUILayout.Button("New Attribute", "label", GUILayout.Width(80))) {
 							ti.attributes.Add (new TileAttribute("New Attribute", ""));
 						}
 						GUILayout.EndHorizontal();
@@ -171,6 +173,7 @@ class TileMapEditor: EditorWindow {
 								if(current_rect.Contains(Event.current.mousePosition)) {
 									selectedTileX = i;
 									selectedTileY = j;
+									ts.getTileInfo(i, j).direction = 0;
 									this.Repaint();
 								}
 							}
