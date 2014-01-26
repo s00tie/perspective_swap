@@ -4,7 +4,7 @@ TextureImporter:
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -24,22 +24,130 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
-  nPOTScale: 1
+    wrapMode: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spritePixelsToUnits: 100
-  alphaIsTransparency: 0
-  textureType: -1
+  alphaIsTransparency: 1
+  textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: sprite_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 195
+        width: 29
+        height: 55
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_1
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 195
+        width: 30
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_2
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 195
+        width: 29
+        height: 55
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_3
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 131
+        width: 24
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_4
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 67
+        width: 30
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_5
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 3
+        width: 24
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_6
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 132
+        width: 25
+        height: 55
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_7
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 67
+        width: 29
+        height: 55
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_8
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 6
+        width: 25
+        height: 53
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_9
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 4
+        width: 25
+        height: 55
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_10
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 67
+        width: 29
+        height: 55
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: sprite_11
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 134
+        width: 25
+        height: 53
+      alignment: 0
+      pivot: {x: .5, y: .5}
   spritePackingTag: 
   userData: 
