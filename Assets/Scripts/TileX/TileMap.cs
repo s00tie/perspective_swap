@@ -209,42 +209,46 @@ public class TileMap: MonoBehaviour {
 			if(tile != null) {
 				tile.astarFrom = from;
 				addAStarNode(t, tile);
+				if(cx + 1 == tx && cy == ty)
+					return true;
 			}
-			if(cx + 1 == tx && cy == ty)
-				return true;
 		}
 		if(cy > 0) {
 			tile = this.checkAStarNode(c, cx - 1, cy, tx, ty, tag, groupId);
 			if(tile != null) {
 				tile.astarFrom = from;
 				addAStarNode(t, tile);
+				if(cx - 1 == tx && cy == ty)
+					return true;
 			}
-			if(cx - 1 == tx && cy == ty)
-				return true;
 		}
 		if(cy < this.height - 1) {
 			tile = this.checkAStarNode(c, cx, cy + 1, tx, ty, tag, groupId);
 			if(tile != null) {
 				tile.astarFrom = from;
 				addAStarNode(t, tile);
+				if(cx == tx && cy + 1 == ty)
+					return true;
 			}
-			if(cx == tx && cy + 1 == ty)
-				return true;
 		}
 		if(cy > 0) {
 			tile = this.checkAStarNode(c, cx, cy - 1, tx, ty, tag, groupId);
 			if(tile != null) {
 				tile.astarFrom = from;
 				addAStarNode(t, tile);
+				if(cx == tx && cy - 1 == ty)
+					return true;
 			}
-			if(cx == tx && cy - 1 == ty)
-				return true;
 		}
 		return false;
 	}
 
 	// AStar against all layers, excluding non-visible layers and all layers in groupId = groupId without tag = tag
 	public Tile[] AStar(int startX, int startY, int endX, int endY, string tag, int groupId) {
+		if(startX == endX && 
+		   startY == endY) {
+			return new Tile[] { };
+		}
 		List<Tile> currentTiles = new List<Tile>();
 		List<Tile> closeNodes = new List<Tile>();
 
@@ -261,14 +265,21 @@ public class TileMap: MonoBehaviour {
 			cx = currentTile.x;
 			cy = currentTile.y;
 		}
-		Tile from = currentTile.astarFrom;
-		Debug.Log(startX.ToString() + " " + startY.ToString());
-		while(from != null && from.x != startX || from.y != startY) {
-			Debug.Log (from);
+		Debug.Log(startX.ToString() + " " + startY.ToString() + " to " + endX.ToString() + " " + endY.ToString());
+
+		Tile end = this.getTile(endX, endY, 0);
+		Tile from = end.astarFrom;
+		List<Tile> result = new List<Tile>();
+		result.Add (end);
+		Debug.Log(from);
+		while((from.x != startX || from.y != startY)) {
+			result.Add (from);
 			from = from.astarFrom;
+
 		}
-		Debug.Log (from);
-		return new Tile[]{};
+		//result.Add (from);
+		//result.Reverse();
+		return result.ToArray();
 	}
 
 }
