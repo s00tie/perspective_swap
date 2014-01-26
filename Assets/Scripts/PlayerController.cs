@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -29,30 +29,23 @@ public class PlayerController : MonoBehaviour {
 		CheckInput();
 	}
 
-	void MoveTo(Vector3 target_pos) {
-		Vector3 this_pos = playerCharacter.transform.position;
-		float distX = target_pos.x - this_pos.x;
-		float distY = target_pos.y - this_pos.y;
-		float move_speed = characterInfo.moveSpeed * Time.deltaTime;
-
-		if(Mathf.Abs (distX) > move_speed) {
-			playerCharacter.transform.Translate(move_speed * Mathf.Sign(distX), 0, 0);
-		} else {
-			playerCharacter.transform.Translate(distX, 0, 0);
-		}
-
-		if(Mathf.Abs (distY) > move_speed) {
-			playerCharacter.transform.Translate(0, move_speed * Mathf.Sign(distY), 0);
-		} else {
-			playerCharacter.transform.Translate(0, distY, 0);
-		}
-
+	void CheckObjectInteraction() {
 		bool adjacentSpecial;
 		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
+		characterInfo.interactionBubble.SetActive(false);
 		switch (characterInfo.occupation) {
 		case CharacterInfo.Occupation.BREAK:
 			if(frontTile.isBreakable) {
-				TileHolder.Instance.SwapInNewTile(0, currentTileX + tileMoveX, currentTileY + tileMoveY);
+				characterInfo.interactionBubble.SetActive(true);
+				if (Input.GetAxis("Touch") != 0) {
+					TileHolder.Instance.SwapInNewTile(0, currentTileX + tileMoveX, currentTileY + tileMoveY);
+					Tile fixedTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
+					fixedTile.isBlock = false;
+					fixedTile.isBreakable = false;
+					fixedTile.isClimbable = false;
+					fixedTile.isTunnelable = false;
+					fixedTile.isMoveable = false;
+				}
 			}
 			break;
 		case CharacterInfo.Occupation.CLIMB:
@@ -77,34 +70,36 @@ public class PlayerController : MonoBehaviour {
 			break;
 		}
 	}
-	
+
+	bool isClose(Vector3 p1, Vector3 p2) {
+		return Mathf.Abs (p2.x - p1.x) < 0.00005f &&
+			Mathf.Abs (p2.y - p1.y) < 0.00005f;
+	}
+
 	private void CheckInput() {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
-			bool closeToDestination = Mathf.Abs(playerCharacter.transform.position.x - (tileMap.startPoint.x + targetTileX * tileMap.xStep) - tileMap.xStep / 2) < tileDestEpsilon &&
-				Mathf.Abs(playerCharacter.transform.position.y - (tileMap.startPoint.y + targetTileY * tileMap.yStep) - tileMap.yStep / 2) < tileDestEpsilon;
-			
-			Animator animator = playerCharacter.GetComponent<Animator>();
-			if(targetTileY == currentTileY && closeToDestination) {
+			bool closeToDest = isClose (this.playerCharacter.transform.position, tileMap.getTile(targetTileX, targetTileY, 0).gameObject.transform.position);
+			if(targetTileY == currentTileY && closeToDest) {
 				if(Input.GetAxis("Horizontal") < 0) {
 					tx = (int)Mathf.Clamp(currentTileX - 1, 0, 9999);
-					animator.StopPlayback();
-					animator.Play("skinless_walk_left");
+					tileMoveX = -1;
+					tileMoveY = 0;
 				} else if(Input.GetAxis("Horizontal") > 0) {
 					tx = (int)Mathf.Clamp(currentTileX + 1, 0, tileMap.width - 1);
-					animator.StopPlayback();
-					animator.Play("skinless_walk_right");
+					tileMoveX = 1;
+					tileMoveY = 0;
 				}
 			}
-			if (targetTileX == currentTileX && closeToDestination) {
+			if (targetTileX == currentTileX && closeToDest) {
 				if(Input.GetAxis("Vertical") > 0) {
 					ty = (int)Mathf.Clamp(currentTileY + 1, 0, 9999);
-					animator.StopPlayback();
-					animator.Play("skinless_walk_up");
+					tileMoveY = 1;
+					tileMoveX = 0;
 				} else if(Input.GetAxis("Vertical") < 0) {
 					ty = (int)Mathf.Clamp(currentTileY - 1, 0, tileMap.height - 1);
-					animator.StopPlayback();
-					animator.Play("skinless_walk_down");
+					tileMoveY = -1;
+					tileMoveX = 0;
 				}
 			}
 			Tile t = tileMap.getTile(tx, ty, 0);
@@ -112,9 +107,11 @@ public class PlayerController : MonoBehaviour {
 				targetTileX = tx;
 				targetTileY = ty;
 
-				this.MoveTo(t.gameObject.transform.position);
+				AIController.MoveTo(t.gameObject.transform.position, characterInfo.moveSpeed, playerCharacter);
 				tileMap.getTileCoordinateAt(playerCharacter.transform.position, ref currentTileX, ref currentTileY);
 			}
+
+			CheckObjectInteraction();
 
 			///	Debug.Log (tileMap.getTileAt(transform.position, 0));
 		} else {

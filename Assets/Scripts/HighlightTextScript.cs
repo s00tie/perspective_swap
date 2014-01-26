@@ -14,7 +14,7 @@ public class HighlightTextScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//desiredRot = Camera.main.transform.rotation; //for getting info
+
 	}
 
 
@@ -29,30 +29,39 @@ public class HighlightTextScript : MonoBehaviour {
 	}
 
 	void OnMouseUp(){
+		//Main Buttons
 		if(buttonName == "Play"){
 			Application.LoadLevel("main");
 		}
 		if(buttonName == "Settings"){
-			Camera.main.GetComponent<MainMenuCamera>().rotToSettings = true;
-			Camera.main.GetComponent<MainMenuCamera>().rotToHelp = false;
-			Camera.main.GetComponent<MainMenuCamera>().rotToMain = false;
 			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().SettingsCameraQat;
 			//Camera.main.transform.rotation = Quaternion.Slerp (Camera.main.transform.rotation, new Quaternion(Camera.main.transform.rotation.x,Camera.main.transform.rotation.y+90, Camera.main.transform.rotation.z,Camera.main.transform.rotation.w),0.01f);
 		}
 		if(buttonName == "Help"){
-			Camera.main.GetComponent<MainMenuCamera>().rotToHelp = true;
-			Camera.main.GetComponent<MainMenuCamera>().rotToSettings = false;
-			Camera.main.GetComponent<MainMenuCamera>().rotToMain = false;
 			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().HelpCameraQat;
 		}
 		if(buttonName == "Exit"){
 			Application.Quit();
 		}
 		if(buttonName == "Main"){
-			Camera.main.GetComponent<MainMenuCamera>().rotToHelp = false;
-			Camera.main.GetComponent<MainMenuCamera>().rotToSettings = false;
-			Camera.main.GetComponent<MainMenuCamera>().rotToMain = true;
 			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().MainCameraQat;
+		}
+		//Settings Buttons
+		if(buttonName == "Volume"){
+			Camera.main.GetComponent<MainMenuCamera>().desiredPos = Camera.main.GetComponent<MainMenuCamera>().VolCameraPos;
+			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().VolCameraQat;
+		}
+		if(buttonName == "Controls"){
+			Camera.main.GetComponent<MainMenuCamera>().desiredPos = Camera.main.GetComponent<MainMenuCamera>().ConCameraPos;
+			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().ConCameraQat;
+		}
+		if(buttonName == "SettingsBackVol"){
+			Camera.main.GetComponent<MainMenuCamera>().desiredPos = Camera.main.GetComponent<MainMenuCamera>().SettingsCameraPos;
+			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().SettingsCameraQat;
+		}
+		if(buttonName == "SettingsBackCon"){
+			Camera.main.GetComponent<MainMenuCamera>().desiredPos = Camera.main.GetComponent<MainMenuCamera>().SettingsCameraPos;
+			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().SettingsCameraQat;
 		}
 	}
 }
