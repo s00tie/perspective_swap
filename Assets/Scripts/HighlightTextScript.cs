@@ -31,7 +31,7 @@ public class HighlightTextScript : MonoBehaviour {
 	void OnMouseUp(){
 		//Main Buttons
 		if(buttonName == "Play"){
-			Application.LoadLevel("main");
+			Application.LoadLevel("level_1");
 		}
 		if(buttonName == "Settings"){
 			Camera.main.GetComponent<MainMenuCamera>().desiredRot = Camera.main.GetComponent<MainMenuCamera>().SettingsCameraQat;
