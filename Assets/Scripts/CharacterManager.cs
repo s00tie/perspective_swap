@@ -33,10 +33,25 @@ public class CharacterManager : MonoBehaviour
 		nearbyCharacters.Clear();
 		for (int i = 0; i < characters.Count; i++) {
 			CharacterInfo testCharacter = characters[i];
-			if (testCharacter != playerCharacter && (testCharacter.transform.position - playerCharacter.transform.position).sqrMagnitude < playerCharacter.shareRadius * playerCharacter.shareRadius) {
+
+			float distanceFromPlayer  = (testCharacter.transform.position - playerCharacter.transform.position).sqrMagnitude;
+			if (testCharacter != playerCharacter && distanceFromPlayer < playerCharacter.shareRadius * playerCharacter.shareRadius) {
+
+				testCharacter.distanceFromCharacter = distanceFromPlayer;
 				nearbyCharacters.Add(testCharacter);
 			}
 		}
+
+		nearbyCharacters.Sort(SortByDistance);
 	}
+
+	// Sort the nearby characters by distance
+	private static int SortByDistance(CharacterInfo o1, CharacterInfo o2) {
+		 if( o1.distanceFromCharacter < o2.distanceFromCharacter )
+			return -1;
+		 else 
+			return 1;
+	}
+	
 }
 
