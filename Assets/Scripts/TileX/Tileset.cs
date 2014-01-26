@@ -21,6 +21,9 @@ public class TileAttribute {
 [Serializable]
 public class TileInfo {
 	public Sprite sprite;
+	public float  direction = 0;
+	public bool   isBlock = false;
+	public bool   isHole = false;
 	public List<TileAttribute> attributes = new List<TileAttribute>();
 
 #region editor
@@ -43,7 +46,7 @@ public class Tileset {
 	[SerializeField]
 	public List<TileInfo> tileInfos = new List<TileInfo>();
 	
-	public void CreateTileSprites() {
+	public void CreateTileSprites(TileMap tm) {
 		this.tileInfos = new List<TileInfo>();
 
 		int x = margin;
@@ -71,7 +74,7 @@ public class Tileset {
 		for(int j=0; j<rows; ++j) {
 			for(int i=0; i<columns; ++i) {
 				TileInfo ti = new TileInfo();
-				ti.sprite = Sprite.Create(texture, new Rect(x, y, tileWidth, tileHeight), new Vector2(0, 0));
+				ti.sprite = Sprite.Create(texture, new Rect(x, y, tileWidth, tileHeight), new Vector2(0.5f, 0.5f), tm.pixelPerUnit);
 				ti.attributes = new List<TileAttribute>();
 				this.tileInfos.Add (ti);
 

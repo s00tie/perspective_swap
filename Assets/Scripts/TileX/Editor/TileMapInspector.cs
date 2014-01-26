@@ -60,17 +60,35 @@ class TileMapInspector: Editor {
 				layer.sortingLayer = EditorGUILayout.Popup("Sorting Layer", layer.sortingLayer, TileGUIUtility.GetSortingLayerNames());
 				layer.sortingOrder = EditorGUILayout.IntField("Sorting Order", layer.sortingOrder);
 
-
+			
+				TileMapEditor editor = TileMapEditor.Get ();
+				Tileset ts = tm.tilesets[editor.selectedTileSetIndex];
+				TileInfo ti = ts.getTileInfo(editor.selectedTileX, editor.selectedTileY);
+				if(ti != null) {
+					if(GUILayout.Button("Fill with Current Tile", GUILayout.Width(200))) {
+						int rows = tm.mapHeight / tm.tileHeight;
+						int columns = tm.mapWidth / tm.tileWidth;
+						for(int i=0; i<rows; ++i) {
+							for(int j=0; j<columns; ++j) {
+								layer.addTile(j, i, ti);
+							}
+						}
+					}
+				} else {
+					GUILayout.Button("Fill with Current Tile", "button off", GUILayout.Width(200));
+				}
+				
 				GUILayout.BeginHorizontal();
 
 				GUILayout.FlexibleSpace();
 				if(GUILayout.Button("Reset", GUILayout.Width(64))) {
 					layer.ResetLayer();	
 				}
+				
 				if(GUILayout.Button("Remove", GUILayout.Width(64))) {
 					layerToRemove = layer;
 				}
-
+				
 				GUILayout.EndHorizontal();
 				Rect r = GUILayoutUtility.GetLastRect();
 				EditorGUILayout.Space();
@@ -125,8 +143,10 @@ class TileMapInspector: Editor {
 				TileInfo ti = ts.getTileInfo(editor.selectedTileX, editor.selectedTileY);
 				previewRenderer.sprite = ti.sprite;
 				previewRenderer.color = new Color(255, 255, 255, 0.5f);
-
-				previewRenderer.gameObject.transform.position = new Vector3(pos.x + x * tm.xStep, pos.y + y * tm.yStep, tm.gameObject.transform.position.z);
+				previewRenderer.gameObject.transform.rotation = Quaternion.AngleAxis(ti.direction, Vector3.forward);
+				previewRenderer.gameObject.transform.position = new Vector3(pos.x + x * tm.xStep + tm.xStep / 2, 
+				                                                            pos.y + y * tm.yStep + tm.yStep / 2, 
+				                                                            tm.gameObject.transform.position.z);
 
 				if(editor.isErase)
 					TileGUIUtility.DrawSceneBezierRect(new Rect(pos.x + x * tm.xStep, pos.y + y * tm.yStep, tm.xStep, tm.yStep), 6, Color.red);
@@ -134,20 +154,24 @@ class TileMapInspector: Editor {
 					TileGUIUtility.DrawSceneBezierRect(new Rect(pos.x + x * tm.xStep, pos.y + y * tm.yStep, tm.xStep, tm.yStep), 6, Color.green);
 
 				if(evt.type == EventType.MouseDown) {
-
-					TileLayer layer;
-					if(tm.layers.Length == 0)
-						layer = tm.addLayer(LayerType.TileLayer, "Layer 0");
-					else
-						layer = tm.layers[selectedLayerIndex];
-					if(layer != null) {
-						if(evt.button == 1) {
-							layer.removeTile(x, y);
-						} else {
-							Tile t = layer.addTile(x, y, ti);
-							Undo.RegisterCreatedObjectUndo(t.gameObject, "Tile");
+					if(evt.button == 0) {
+						TileLayer layer;
+						if(tm.layers.Length == 0)
+							layer = tm.addLayer(LayerType.TileLayer, "Layer 0");
+						else
+							layer = tm.layers[selectedLayerIndex];
+						if(layer != null) {
+							if(editor.isErase) {
+								layer.removeTile(x, y);
+							} else {
+								Tile t = layer.addTile(x, y, ti);
+								Undo.RegisterCreatedObjectUndo(t.gameObject, "Tile");
+							}
 						}
+					} else {
+						ti.direction = (ti.direction + 90) % 360;
 					}
+
 				}
 			} 
 

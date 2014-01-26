@@ -36,6 +36,12 @@ public class Tile: MonoBehaviour {
 	[SerializeField]
 	public List<TileAttribute> attributes = new List<TileAttribute>();
 
+	public bool isBlock = false;
+	public bool isFloatable = false;
+	public bool isBreakable = false;
+	public bool isClimbable = false;
+	public bool isMoveable = false;
+	public bool isTunnelable = false;
 
 	bool _visible;
 	public bool visible {
@@ -53,6 +59,8 @@ public class Tile: MonoBehaviour {
 		this._y = y;
 		this._width = (int)info.sprite.textureRect.width;
 		this._height = (int)info.sprite.textureRect.height;
+
+		this.isBlock = info.isBlock;
 
 		SpriteRenderer r = this.gameObject.GetComponent<SpriteRenderer>();
 		r.sprite = info.sprite;

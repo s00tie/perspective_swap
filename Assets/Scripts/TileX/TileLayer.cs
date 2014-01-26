@@ -69,26 +69,36 @@ public class TileLayer: MonoBehaviour {
 	}
 
 	public Tile addTile(int x, int y, TileInfo ti) {
+		
+		int idx = y * parentMap.width + x;
+		if(!(idx >= 0 && idx <  this.tiles.Count)) {
+			return null;
+		}
 		this.removeTile(x, y);
 
 		GameObject obj = new GameObject();
 		obj.transform.parent = this.gameObject.transform;
-		obj.transform.position = new Vector3(x * parentMap.xStep, y * parentMap.yStep) + parentMap.startPoint;
+		obj.transform.position = new Vector3(x * parentMap.xStep + parentMap.xStep / 2, 
+		                                     y * parentMap.yStep + parentMap.yStep / 2) + parentMap.startPoint;
 		obj.name = "Tile_"+x.ToString()+"_"+y.ToString();
+		obj.transform.rotation = Quaternion.AngleAxis(ti.direction, Vector3.forward);
 
 		Tile t = obj.AddComponent<Tile>();
 		t.Init(x, y, ti, sortingOrder, sortingLayer);
 		t.parentLayer = this;
 
-		this.tiles[y * parentMap.width + x] = obj;
+		this.tiles[idx] = obj;
 		return t;
 	}
 
 	public void removeTile(int x, int y) {
-		GameObject t = this.tiles[y * parentMap.width + x];
-		if(t != null) { 
-			DestroyImmediate(t);
-			this.tiles[y * parentMap.width + x] = null;
+		int idx = y * parentMap.width + x;
+		if(idx >= 0 && idx <  this.tiles.Count) {
+			GameObject t = this.tiles[idx];
+			if(t != null) { 
+				DestroyImmediate(t);
+				this.tiles[y * parentMap.width + x] = null;
+			}
 		}
 	}
 
@@ -115,6 +125,11 @@ public class TileLayer: MonoBehaviour {
 		for(int i=0; i<parentMap.width*parentMap.height; ++i) {
 			tiles.Add(null);
 		}
+	}
+
+	public Tile getTileAt(Vector3 pos) {
+		return this.getTile((int)Mathf.Floor((pos.x) / parentMap.xStep),
+		                    (int)Mathf.Floor((pos.y ) / parentMap.yStep));
 	}
 
 	public override string ToString () {
