@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 		Vector3 this_pos = playerCharacter.transform.position;
 		float distX = target_pos.x - this_pos.x;
 		float distY = target_pos.y - this_pos.y;
-		float move_speed = characterInfo.moveSpeed;
+		float move_speed = characterInfo.moveSpeed * Time.deltaTime;
 
 		if(Mathf.Abs (distX) > move_speed) {
 			playerCharacter.transform.Translate(move_speed * Mathf.Sign(distX), 0, 0);
