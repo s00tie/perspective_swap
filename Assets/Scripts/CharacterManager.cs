@@ -46,6 +46,23 @@ public class CharacterManager : MonoBehaviour
 		}
 
 		nearbyCharacters.Sort(SortByDistance);
+		if(nearbyCharacters.Count > 0) {
+			CharacterInfo ci = nearbyCharacters[0];
+			if(ci.makeScreenBlack) {
+				float dist = ci.distanceFromCharacter;
+				if(dist < ci.screenBlackDistance) {
+					float a = dist / (ci.screenBlackDistance / ci.screenBlackAlphaThreshold);
+					GameObject o = iTween.CameraFadeAdd();
+					GUITexture tex = o.GetComponent<GUITexture>();
+					tex.color = new Color(0.5f, 0.5f, 0.5f, ci.screenBlackAlphaThreshold - a);
+				} else {
+					GameObject o = iTween.CameraFadeAdd();
+					GUITexture tex = o.GetComponent<GUITexture>();
+					tex.color = new Color(0.5f, 0.5f, 0.5f, 0f);
+				}
+			}
+
+		}
 	}
 
 	// Sort the nearby characters by distance

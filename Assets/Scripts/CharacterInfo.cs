@@ -20,5 +20,10 @@ public class CharacterInfo : MonoBehaviour
 		TUNNEL
 	}
 	public Occupation occupation = Occupation.BREAK;
+
+
+	public bool makeScreenBlack = false;
+	public float screenBlackAlphaThreshold = 0.3f;
+	public float screenBlackDistance = 3f;
 }
 

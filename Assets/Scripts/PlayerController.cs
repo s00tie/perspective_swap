@@ -84,7 +84,6 @@ public class PlayerController : MonoBehaviour {
 						npc.characterInfo.moveSpeed = 2;
 						npc.nagivateTo(currentTileX, currentTileY, () => {
 							GameStatus.PeopleSaved += 1;
-							Debug.Log("sdsdsd");
 						});
 						npc.wanderRadius = 0;
 						npc.enableWandering = false;
