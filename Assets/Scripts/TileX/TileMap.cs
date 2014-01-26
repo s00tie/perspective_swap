@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -138,6 +139,136 @@ public class TileMap: MonoBehaviour {
 			}
 			return tp.gameObject.GetComponent<SpriteRenderer>();
 		}
+	}
+
+	// shows layers with tag = tag in a group, hides all others
+	public void showLayerInGroupWithTag(string tag, int groupId) {
+		TileLayer[] layers = this.layers;
+		foreach(TileLayer layer in layers) {
+			if(layer.layerGroup == groupId) {
+			    if(layer.layerTag == tag) {
+					layer.visible = true;
+				} else {
+					layer.visible = false;
+				}
+			}
+		}
+	}
+
+	int getAStarScore(int sx, int sy, int tx, int ty) {
+		return (int)Mathf.Abs (tx - sx) * 10 + (int)Mathf.Abs(ty - sy) * 10;
+	}
+
+	void addAStarNode(List<Tile> t, Tile n) {
+		int index = t.IndexOf(n);
+		if(index != -1) {
+			if(n.astarScore < t[index].astarScore) {
+				t[index] = n;
+			}
+			return;
+		}
+
+		for(int i=0; i<t.Count; ++i) {
+			if(t[i].astarScore <= n.astarScore) {
+				t.Insert (i, n);
+				return;
+			}
+		}
+		t.Add (n);
+	}
+
+	Tile checkAStarNode(List<Tile> c, int x, int y, int tx, int ty, string tag, int groupId) {
+		Tile t;
+		foreach(TileLayer layer in this.layers) {
+			if(layer.layerGroup == groupId) {
+				if(layer.layerTag == tag) {
+					t = layer.getTile(x, y);
+					if(t != null && t.isBlock)
+						return null;
+				}
+			}
+		}
+		t = this.getTile(x, y, 0);
+		if(t != null && t.isBlock)
+			return null;
+
+		if(c.Contains(t))
+			return null;
+		t.astarScore = getAStarScore(x + 1, y, tx, ty) + 1;
+		return t;
+	}
+
+
+	bool addAdjacentNodes(List<Tile> t, List<Tile> c, Tile from, int x, int y, int tx, int ty, string tag, int groupId) {
+		if(t.Count > 100)
+			return true;
+		int cx = x, cy = y;
+		Tile tile = null;
+		if(cx < this.width - 1) {
+			tile = this.checkAStarNode(c, cx + 1, cy, tx, ty, tag, groupId);
+			if(tile != null) {
+				tile.astarFrom = from;
+				addAStarNode(t, tile);
+			}
+			if(cx + 1 == tx && cy == ty)
+				return true;
+		}
+		if(cy > 0) {
+			tile = this.checkAStarNode(c, cx - 1, cy, tx, ty, tag, groupId);
+			if(tile != null) {
+				tile.astarFrom = from;
+				addAStarNode(t, tile);
+			}
+			if(cx - 1 == tx && cy == ty)
+				return true;
+		}
+		if(cy < this.height - 1) {
+			tile = this.checkAStarNode(c, cx, cy + 1, tx, ty, tag, groupId);
+			if(tile != null) {
+				tile.astarFrom = from;
+				addAStarNode(t, tile);
+			}
+			if(cx == tx && cy + 1 == ty)
+				return true;
+		}
+		if(cy > 0) {
+			tile = this.checkAStarNode(c, cx, cy - 1, tx, ty, tag, groupId);
+			if(tile != null) {
+				tile.astarFrom = from;
+				addAStarNode(t, tile);
+			}
+			if(cx == tx && cy - 1 == ty)
+				return true;
+		}
+		return false;
+	}
+
+	// AStar against all layers, excluding non-visible layers and all layers in groupId = groupId without tag = tag
+	public Tile[] AStar(int startX, int startY, int endX, int endY, string tag, int groupId) {
+		List<Tile> currentTiles = new List<Tile>();
+		List<Tile> closeNodes = new List<Tile>();
+
+		int cx = startX, cy = startY;
+		Tile currentTile = this.getTile (startX, startY, 0);
+		while(!addAdjacentNodes(currentTiles, closeNodes, currentTile, cx, cy, endX, endY, tag, groupId)) {
+			currentTile = currentTiles.Last();
+			currentTiles.RemoveAt (currentTiles.Count - 1);
+			if(currentTiles.Count == 0) {
+				return new Tile[] { };
+			}
+			closeNodes.Add (currentTile);
+
+			cx = currentTile.x;
+			cy = currentTile.y;
+		}
+		Tile from = currentTile.astarFrom;
+		Debug.Log(startX.ToString() + " " + startY.ToString());
+		while(from != null && from.x != startX || from.y != startY) {
+			Debug.Log (from);
+			from = from.astarFrom;
+		}
+		Debug.Log (from);
+		return new Tile[]{};
 	}
 
 }

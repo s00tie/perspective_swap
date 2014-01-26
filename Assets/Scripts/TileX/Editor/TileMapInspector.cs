@@ -60,6 +60,10 @@ class TileMapInspector: Editor {
 				layer.sortingLayer = EditorGUILayout.Popup("Sorting Layer", layer.sortingLayer, TileGUIUtility.GetSortingLayerNames());
 				layer.sortingOrder = EditorGUILayout.IntField("Sorting Order", layer.sortingOrder);
 
+				EditorGUILayout.Space();
+				layer.layerGroup = EditorGUILayout.IntField("Group Id", layer.layerGroup);
+				layer.layerTag = EditorGUILayout.TextField("Layer Tag", layer.layerTag);
+
 			
 				TileMapEditor editor = TileMapEditor.Get ();
 				Tileset ts = tm.tilesets[editor.selectedTileSetIndex];
@@ -70,7 +74,7 @@ class TileMapInspector: Editor {
 						int columns = tm.mapWidth / tm.tileWidth;
 						for(int i=0; i<rows; ++i) {
 							for(int j=0; j<columns; ++j) {
-								layer.addTile(j, i, ti);
+								layer.addTile(i, j, ti);
 							}
 						}
 					}
