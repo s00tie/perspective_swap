@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
+	public GameObject playerCharacter = null;
 	private CharacterInfo characterInfo = null;
 	public TileMap tileMap;
 
@@ -10,12 +11,12 @@ public class PlayerController : MonoBehaviour {
 	int targetTileX, targetTileY;
 
 	void Start () {
-		characterInfo = gameObject.GetComponent<CharacterInfo>();
+		characterInfo = playerCharacter.GetComponent<CharacterInfo>();
 		if (characterInfo ==  null) {
 			enabled = false;
 		}
 		if(tileMap != null)
-			tileMap.getTileCoordinateAt(this.gameObject.transform.position, ref currentTileX, ref currentTileY);
+			tileMap.getTileCoordinateAt(playerCharacter.transform.position, ref currentTileX, ref currentTileY);
 		targetTileX = currentTileX;
 		targetTileY = currentTileY;
 	}
@@ -25,21 +26,21 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void MoveTo(Vector3 target_pos) {
-		Vector3 this_pos = this.gameObject.transform.position;
+		Vector3 this_pos = playerCharacter.transform.position;
 		float distX = target_pos.x - this_pos.x;
 		float distY = target_pos.y - this_pos.y;
 		float move_speed = characterInfo.moveSpeed;
 
 		if(Mathf.Abs (distX) > move_speed) {
-			transform.Translate(move_speed * Mathf.Sign(distX), 0, 0);
+			playerCharacter.transform.Translate(move_speed * Mathf.Sign(distX), 0, 0);
 		} else {
-			transform.Translate(distX, 0, 0);
+			playerCharacter.transform.Translate(distX, 0, 0);
 		}
 
 		if(Mathf.Abs (distY) > move_speed) {
-			transform.Translate(0, move_speed * Mathf.Sign(distY), 0);
+			playerCharacter.transform.Translate(0, move_speed * Mathf.Sign(distY), 0);
 		} else {
-			transform.Translate(0, distY, 0);
+			playerCharacter.transform.Translate(0, distY, 0);
 		}
 	}
 	
@@ -61,18 +62,19 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 			Tile t = tileMap.getTile(tx, ty, 0);
-			if(!t.isBlock && !t.isBreakable && !t.isFloatable && !t.isClimbable && !t.isTunnelable) {
+			if(!t.isBlock) {
 				targetTileX = tx;
 				targetTileY = ty;
 
 				this.MoveTo(t.gameObject.transform.position);
-				tileMap.getTileCoordinateAt(this.gameObject.transform.position, ref currentTileX, ref currentTileY);
+				tileMap.getTileCoordinateAt(playerCharacter.transform.position, ref currentTileX, ref currentTileY);
+				Debug.Log (currentTileX);
 			}
 
 			///	Debug.Log (tileMap.getTileAt(transform.position, 0));
 		} else {
-			transform.Translate(characterInfo.moveSpeed * Input.GetAxis("Horizontal"), 0, 0);
-			transform.Translate(0, characterInfo.moveSpeed * Input.GetAxis("Vertical"), 0);
+			playerCharacter.transform.Translate(characterInfo.moveSpeed * Input.GetAxis("Horizontal"), 0, 0);
+			playerCharacter.transform.Translate(0, characterInfo.moveSpeed * Input.GetAxis("Vertical"), 0);
 		}
 	}
 }
