@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour {
 
 	void CheckObjectInteraction() {
 		bool adjacentSpecial;
-		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
+		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, characterInfo.tileLayer);
 		if(characterInfo.interactionBubble != null)
 			characterInfo.interactionBubble.SetActive(false);
 		switch (characterInfo.occupation) {

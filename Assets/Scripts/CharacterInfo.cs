@@ -9,6 +9,7 @@ public class CharacterInfo : MonoBehaviour
 
 	public string tag = "";
 	public TileMap tileMap;
+	public int tileLayer = 0;
 	public GameObject interactionBubble = null;
 
 	public enum Occupation {
