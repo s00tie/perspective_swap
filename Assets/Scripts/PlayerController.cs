@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject playerCharacter = null;
 	private CharacterInfo characterInfo = null;
 	public TileMap tileMap;
+	private float tileDestEpsilon = 0.00005f;
 
 	int currentTileX, currentTileY;
 	int targetTileX, targetTileY;
@@ -47,14 +48,17 @@ public class PlayerController : MonoBehaviour {
 	private void CheckInput() {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
-			if(targetTileY == currentTileY) {
+			Debug.Log (Mathf.Abs(playerCharacter.transform.position.x - (tileMap.startPoint.x + targetTileX * tileMap.xStep) - tileMap.xStep / 2));
+			bool closeToDestination = Mathf.Abs(playerCharacter.transform.position.x - (tileMap.startPoint.x + targetTileX * tileMap.xStep) - tileMap.xStep / 2) < tileDestEpsilon &&
+				Mathf.Abs(playerCharacter.transform.position.y - (tileMap.startPoint.y + targetTileY * tileMap.yStep) - tileMap.yStep / 2) < tileDestEpsilon;
+			if(targetTileY == currentTileY && closeToDestination) {
 				if(Input.GetAxis("Horizontal") < 0) {
 					tx = (int)Mathf.Clamp(currentTileX - 1, 0, 9999);
 				} else if(Input.GetAxis("Horizontal") > 0) {
 					tx = (int)Mathf.Clamp(currentTileX + 1, 0, tileMap.width - 1);
 				}
 			}
-			if(targetTileX == currentTileX) {
+			if (targetTileX == currentTileX && closeToDestination) {
 				if(Input.GetAxis("Vertical") > 0) {
 					ty = (int)Mathf.Clamp(currentTileY + 1, 0, 9999);
 				} else if(Input.GetAxis("Vertical") < 0) {
@@ -68,7 +72,6 @@ public class PlayerController : MonoBehaviour {
 
 				this.MoveTo(t.gameObject.transform.position);
 				tileMap.getTileCoordinateAt(playerCharacter.transform.position, ref currentTileX, ref currentTileY);
-				Debug.Log (currentTileX);
 			}
 
 			///	Debug.Log (tileMap.getTileAt(transform.position, 0));
