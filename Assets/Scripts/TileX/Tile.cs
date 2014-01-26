@@ -80,4 +80,14 @@ public class Tile: MonoBehaviour {
 		SpriteRenderer sr = this.gameObject.GetComponent<SpriteRenderer>();
 		sr.color = new Color(255, 255, 255, a);
 	}
+
+	public string getAttribute(string key) {
+		foreach(TileAttribute attr in this.attributes) {
+			if(attr.name == key) {
+				return attr.value;
+			}
+		}
+		return "";
+	}
+
 }

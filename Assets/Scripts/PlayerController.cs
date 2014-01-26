@@ -32,7 +32,8 @@ public class PlayerController : MonoBehaviour {
 	void CheckObjectInteraction() {
 		bool adjacentSpecial;
 		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
-		characterInfo.interactionBubble.SetActive(false);
+		if(characterInfo.interactionBubble != null)
+			characterInfo.interactionBubble.SetActive(false);
 		switch (characterInfo.occupation) {
 		case CharacterInfo.Occupation.BREAK:
 			if(frontTile.isBreakable) {
@@ -69,6 +70,21 @@ public class PlayerController : MonoBehaviour {
 			}
 			break;
 		}
+
+		string isEnd = tileMap.getAttributeAt(currentTileX, currentTileY, "isend");
+		if(isEnd.Length > 0) {
+			if(!GameStatus.ended) {
+				iTween.CameraFadeAdd();
+				iTween.CameraFadeTo(0.5f, 1f);
+				GameStatus.ended = true;
+
+				foreach(CharacterInfo character in CharacterManager.Instance.characters) {
+					AIController npc = character.gameObject.GetComponent<AIController>();
+					if(npc != null)
+						npc.nagivateTo(currentTileX, currentTileY);
+				}
+			}
+		}
 	}
 
 	bool isClose(Vector3 p1, Vector3 p2) {
@@ -103,7 +119,7 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 			Tile t = tileMap.getTile(tx, ty, 0);
-			if(!t.isBlock) {
+			if(!tileMap.isBlockAt(tx, ty)) {
 				targetTileX = tx;
 				targetTileY = ty;
 

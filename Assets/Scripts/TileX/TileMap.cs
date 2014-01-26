@@ -6,9 +6,16 @@ using System.Collections.Generic;
 
 public class TileMap: MonoBehaviour {
 
+	TileLayer[] layerCache = null;
 	public TileLayer[] layers { 
 		get {
-			return this.gameObject.GetComponentsInChildren<TileLayer>();
+			if(Application.isEditor)
+				return this.gameObject.GetComponentsInChildren<TileLayer>();
+			else {
+				if(layerCache == null)
+					layerCache = this.gameObject.GetComponentsInChildren<TileLayer>();
+				return layerCache;
+			}
 		}
 	}
 
@@ -198,6 +205,27 @@ public class TileMap: MonoBehaviour {
 		return t;
 	}
 
+
+	public string getAttributeAt(int x, int y, string key) {
+		foreach(TileLayer layer in this.layers) {
+			Tile t = layer.getTile(x, y);
+			string v = t.getAttribute(key);
+			if(v.Length > 0)
+				return v;
+		}
+		return "";
+	}
+
+	public bool isBlockAt(int x, int y) {
+		foreach(TileLayer layer in this.layers) {
+			if(layer.visible && layer.enabled) {
+				Tile t = layer.getTile(x, y);
+				if(t.isBlock)
+					return true;
+			}
+		}
+		return false;
+	}
 
 	bool addAdjacentNodes(List<Tile> t, List<Tile> c, Tile from, int x, int y, int tx, int ty, string tag, int groupId) {
 		if(t.Count > 100)

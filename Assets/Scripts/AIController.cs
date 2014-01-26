@@ -16,6 +16,9 @@ class AIController: MonoBehaviour {
 	bool moveReady;
 	List<Vector3> routePoints;
 	Vector3 targetPos;
+	
+	int currentTileX = 0, currentTileY = 0;
+
 
 	void Start () {
 		currentTime = 0;
@@ -34,25 +37,27 @@ class AIController: MonoBehaviour {
 		int tx = UnityEngine.Random.Range(-wanderRadius, wanderRadius);
 		int ty = UnityEngine.Random.Range(-wanderRadius, wanderRadius);
 
-		int currentTileX = 0, currentTileY = 0;
 		tileMap.getTileCoordinateAt(characterInfo.gameObject.transform.position, ref currentTileX, ref currentTileY);
+		this.nagivateTo(currentTileX + tx, currentTileY + ty);
+	}
 
+	void onWanderFinished() {
+		moveReady = true;
+	}
+
+	public void nagivateTo(int x, int y) {
+		
 		Tile[] route = tileMap.AStar(currentTileX, currentTileY,
-		       	    	    	     currentTileX + tx, currentTileY + ty,
-		        	    	         this.characterInfo.tag,
-		                    	  	 1);
-
+		                             x, y,
+		                             this.characterInfo.tag,
+		                             1);
+		
 		if(route.Length > 0) {
 			moveReady = false;
 			routePoints = new List<Vector3>();
 			foreach(Tile t in route) {
 				routePoints.Add (t.gameObject.transform.position);
 			}
-			string d = "";
-			foreach(Vector3 pos in routePoints) {
-				d += "(" + pos.ToString() + ") -> ";
-			}
-			Debug.Log(d);
 			/*
 			iTween.MoveTo(characterInfo.gameObject,
 			              iTween.Hash("path", routePoints.ToArray(), 
@@ -62,10 +67,6 @@ class AIController: MonoBehaviour {
 			            			  "easetype", iTween.EaseType.linear));
 */
 		}
-	}
-
-	void onWanderFinished() {
-		moveReady = true;
 	}
 	
 	public static void MoveTo(Vector3 target_pos, float speed, GameObject go) {
@@ -132,6 +133,8 @@ class AIController: MonoBehaviour {
 		}
 
 	}
+
+
 
 	void Update()  {
 		currentTime += Time.deltaTime;
