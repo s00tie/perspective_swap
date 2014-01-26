@@ -30,6 +30,9 @@ public class CharacterManager : MonoBehaviour
 	}
 
 	void Update () {
+		if(playerCharacter == null)
+			return;
+
 		nearbyCharacters.Clear();
 		for (int i = 0; i < characters.Count; i++) {
 			CharacterInfo testCharacter = characters[i];

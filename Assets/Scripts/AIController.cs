@@ -11,6 +11,7 @@ class AIController: MonoBehaviour {
 
 	public int wanderRadius = 1;
 	public float wanderInterval = 5f;
+	public bool enableWandering = true;
 
 	float currentTime;
 	bool moveReady;
@@ -19,6 +20,7 @@ class AIController: MonoBehaviour {
 	
 	int currentTileX = 0, currentTileY = 0;
 
+	Action finishCallback = null;
 
 	void Start () {
 		currentTime = 0;
@@ -45,8 +47,8 @@ class AIController: MonoBehaviour {
 		moveReady = true;
 	}
 
-	public void nagivateTo(int x, int y) {
-		
+	public void nagivateTo(int x, int y, Action cb = null) {
+		tileMap.getTileCoordinateAt(characterInfo.gameObject.transform.position, ref currentTileX, ref currentTileY);
 		Tile[] route = tileMap.AStar(currentTileX, currentTileY,
 		                             x, y,
 		                             this.characterInfo.tag,
@@ -58,6 +60,10 @@ class AIController: MonoBehaviour {
 			foreach(Tile t in route) {
 				routePoints.Add (t.gameObject.transform.position);
 			}
+			if(routePoints.Count > 0)
+				targetPos = routePoints[routePoints.Count - 1];
+
+			finishCallback = cb;
 			/*
 			iTween.MoveTo(characterInfo.gameObject,
 			              iTween.Hash("path", routePoints.ToArray(), 
@@ -127,24 +133,24 @@ class AIController: MonoBehaviour {
 					routePoints.RemoveAt (routePoints.Count - 1);
 				} else {
 					moveReady = true;
+					if(finishCallback != null)
+						finishCallback();
 				}
 
 			}
 		}
-
 	}
 
-
-
 	void Update()  {
-		currentTime += Time.deltaTime;
-		if(currentTime >= this.wanderInterval) {
-			if(this.moveReady) 
-				this.wander();
-
-			currentTime = 0f;
+		if(enableWandering) {
+			currentTime += Time.deltaTime;
+			if(currentTime >= this.wanderInterval) {
+				if(this.moveReady) 
+					this.wander();
+					
+				currentTime = 0f;
+			}
 		}
-
 		this.updateMovement();
 	}
 

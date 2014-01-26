@@ -75,16 +75,27 @@ public class PlayerController : MonoBehaviour {
 		if(isEnd.Length > 0) {
 			if(!GameStatus.ended) {
 				iTween.CameraFadeAdd();
-				iTween.CameraFadeTo(0.5f, 1f);
+				iTween.CameraFadeTo(iTween.Hash("amount", 1.0f, "time", 20f/*, "oncomplete", "OnCamFadeComplete", "oncompletetarget", this.gameObject*/));
 				GameStatus.ended = true;
 
 				foreach(CharacterInfo character in CharacterManager.Instance.characters) {
 					AIController npc = character.gameObject.GetComponent<AIController>();
-					if(npc != null)
-						npc.nagivateTo(currentTileX, currentTileY);
+					if(npc != null) {
+						npc.characterInfo.moveSpeed = 2;
+						npc.nagivateTo(currentTileX, currentTileY, () => {
+							GameStatus.PeopleSaved += 1;
+							Debug.Log("sdsdsd");
+						});
+						npc.wanderRadius = 0;
+						npc.enableWandering = false;
+					}
 				}
 			}
 		}
+	}
+
+	void OnCamFadeComplete() {
+		iTween.CameraFadeTo(iTween.Hash("amount", -1.0f, "time", 0.5f));
 	}
 
 	bool isClose(Vector3 p1, Vector3 p2) {

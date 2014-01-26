@@ -14,6 +14,44 @@ class GUIController: MonoBehaviour {
 
 		if(GameStatus.ended) {
 
+			GUILayout.BeginArea(new Rect(Screen.width / 2 - 200,
+			                             Screen.height / 2- 100,
+			                             400,
+			                             200), "", "box");
+
+			GUILayout.BeginVertical();
+			GUILayout.BeginHorizontal();
+
+			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+			GUI.skin.label.fontSize = 40;
+			GUILayout.Label("Conguratulations !!!!");
+
+			GUILayout.EndHorizontal();
+
+			
+			GUI.skin.label.fontSize = 30;
+			GUILayout.Label(" People Saved = " + GameStatus.PeopleSaved.ToString());
+
+			
+			GUILayout.FlexibleSpace();
+			GUILayout.FlexibleSpace();
+			GUILayout.FlexibleSpace();
+			GUILayout.FlexibleSpace();
+
+			GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
+			if(GUILayout.Button("Exit", GUILayout.Width(120))) {
+
+			}
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal();
+
+			GUILayout.EndVertical();
+
+
+			GUILayout.EndArea();
+
+
 		} else {
 
 			if(playerController != null && lifeIndicator != null) {
