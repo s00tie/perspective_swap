@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CameraManager : MonoBehaviour {
 	public Camera mainCamera;
@@ -23,7 +24,37 @@ public class CameraManager : MonoBehaviour {
 				/* TODO: should probably start at closest */
 				targetIndex = 0;
 				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
-			} else if (Input.GetAxis("Target") != 0 && readyToRetarget) {
+			} 
+			// Switch between possible characters
+			else if (Input.GetKeyDown(KeyCode.Tab))
+			{
+				// Go to next character
+				List<CharacterInfo> nearbyCharacter = CharacterManager.Instance.nearbyCharacters;
+				List<CharacterInfo> characters = CharacterManager.Instance.characters;
+				int currentIndex = characters.IndexOf(oldTargetCharacter);
+				CharacterInfo currentInfo = null;
+
+				int targetIndex = -1;
+				while( targetIndex < 0 )
+				{
+					++currentIndex;
+					if( currentIndex >= characters.Count )
+					{
+						currentIndex = 0;
+					}
+
+					currentInfo = characters[currentIndex];
+					if( nearbyCharacter.Contains( currentInfo ))
+					{
+						targetIndex = nearbyCharacter.IndexOf( currentInfo );
+					}
+
+				}
+
+
+				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
+			}
+			else if (Input.GetAxis("Target") != 0 && readyToRetarget) {
 				targetIndex++;
 				if (targetIndex >= CharacterManager.Instance.nearbyCharacters.Count) {
 					targetIndex = 0;
@@ -33,8 +64,14 @@ public class CameraManager : MonoBehaviour {
 			} else if (Input.GetAxis("Target") == 0 && !readyToRetarget) {
 				readyToRetarget = true;
 			}
+			// Old selection is out of range, swap to closest
+			else if( !CharacterManager.Instance.nearbyCharacters.Contains( oldTargetCharacter ) )
+			{
+				targetIndex = 0;
+				ShowAltCamera(CharacterManager.Instance.nearbyCharacters[targetIndex], true);
+			}
 		} else if (showingAltCamera){
-			if (CharacterManager.Instance.nearbyCharacters == null) {
+			if (CharacterManager.Instance.nearbyCharacters != null) {
 				HideAltCamera();
 			}
 		}
