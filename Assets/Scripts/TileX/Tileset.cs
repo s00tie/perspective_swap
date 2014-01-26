@@ -53,14 +53,14 @@ public class Tileset {
 		int y = margin;
 		int xc = 0;
 		int yc = 0;
-		while(y < texture.height) {
+		while(y <= texture.height) {
 			x += tileWidth + spacing;
 			xc += 1;
 			if(x >= texture.width) {
 				x = margin;
 				y += tileHeight + spacing;
 
-				if(y < texture.height) {
+				if(y <= texture.height) {
 					columns = xc;
 					xc = 0;
 					yc += 1;
