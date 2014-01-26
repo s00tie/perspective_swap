@@ -32,10 +32,11 @@ public class PlayerController : MonoBehaviour {
 		return Mathf.Abs (p2.x - p1.x) < 0.00005f &&
 			Mathf.Abs (p2.y - p1.y) < 0.00005f;
 	}
-	
+
 	private void CheckInput() {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
+
 			bool closeToDest = isClose (this.playerCharacter.transform.position, tileMap.getTile(targetTileX, targetTileY, 0).gameObject.transform.position);
 		
 			if(targetTileY == currentTileY && closeToDest) {
