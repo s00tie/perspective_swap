@@ -7,6 +7,8 @@ class TileMapInspector: Editor {
 
 	public int selectedLayerIndex;
 
+	public Sprite markedSprite;
+
 	public override void OnInspectorGUI() {
 
 		TileMap tm = this.target as TileMap;
@@ -38,6 +40,7 @@ class TileMapInspector: Editor {
 		GUILayout.EndHorizontal();
 
 		TileLayer layerToRemove = null;
+		TileLayer layerToCopy = null;
 		selectedLayerIndex = TileGUIUtility.MakeSimpleList(
 			selectedLayerIndex, 
 			TileGUIUtility.GetStringArray(tm.layers), 
@@ -68,25 +71,49 @@ class TileMapInspector: Editor {
 				TileMapEditor editor = TileMapEditor.Get ();
 				Tileset ts = tm.tilesets[editor.selectedTileSetIndex];
 				TileInfo ti = ts.getTileInfo(editor.selectedTileX, editor.selectedTileY);
+
+				EditorGUILayout.BeginHorizontal();
 				if(ti != null) {
 					if(GUILayout.Button("Fill with Current Tile", GUILayout.Width(200))) {
 						int rows = tm.mapHeight / tm.tileHeight;
 						int columns = tm.mapWidth / tm.tileWidth;
 						for(int i=0; i<rows; ++i) {
 							for(int j=0; j<columns; ++j) {
-								layer.addTile(i, j, ti);
+								layer.addTile(j, i, ti);
 							}
 						}
 					}
 				} else {
 					GUILayout.Button("Fill with Current Tile", "button off", GUILayout.Width(200));
 				}
+				if(GUILayout.Button("Mark")) {
+					markedSprite = ti.sprite;
+				}
+				if(markedSprite != null) {
+					if(GUILayout.Button ("Replace")) {
+						for(int y=0; y<tm.height; y++) {
+							for(int x=0; x<tm.width; x++) {
+								Tile t = layer.getTile(x, y);
+								Sprite tileSpr = t.GetComponent<SpriteRenderer>().sprite;
+								if(tileSpr.texture == markedSprite.texture &&
+							   		tileSpr.textureRect == markedSprite.textureRect) {
+									t.gameObject.GetComponent<SpriteRenderer>().sprite = ti.sprite;
+								}
+							}
+						}
+						markedSprite = null;
+					}
+				}
+				EditorGUILayout.EndHorizontal();
 				
 				GUILayout.BeginHorizontal();
 
 				GUILayout.FlexibleSpace();
 				if(GUILayout.Button("Reset", GUILayout.Width(64))) {
 					layer.ResetLayer();	
+				}
+				if(GUILayout.Button("Copy as New", GUILayout.Width(120))) {
+					layerToCopy = layer;
 				}
 				
 				if(GUILayout.Button("Remove", GUILayout.Width(64))) {
@@ -104,6 +131,27 @@ class TileMapInspector: Editor {
 		);
 		if(layerToRemove != null) {
 			tm.RemoveLayer(layerToRemove);
+		}
+		if(layerToCopy != null) {
+			TileLayer layer = tm.addLayer(LayerType.TileLayer, layerToCopy.name + " Copied");
+			for(int y=0; y<tm.height; y++) {
+				for(int x=0; x<tm.width; x++) {
+					Tile t = layerToCopy.getTile(x, y);
+					TileInfo ti = new TileInfo();
+					ti.sprite = t.gameObject.GetComponent<SpriteRenderer>().sprite;
+					ti.attributes = t.attributes;
+
+					float angle;
+					Vector3 axis;
+					t.gameObject.transform.rotation.ToAngleAxis(out angle, out axis);
+					ti.direction = angle;
+					ti.isBlock = t.isBlock;
+					ti.editorExpanded = false;
+
+					layer.addTile(x, y, ti);	
+				}
+			}
+
 		}
 
 		EditorGUILayout.EndVertical();
