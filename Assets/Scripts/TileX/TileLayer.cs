@@ -18,6 +18,9 @@ public class TileLayer: MonoBehaviour {
 	public int sortingOrder = 0;
 	public int sortingLayer = 0;
 
+	public int layerGroup = 0;
+	public string layerTag = "";
+
 	[SerializeField]
 	public List<GameObject> tiles;
 	
@@ -69,11 +72,6 @@ public class TileLayer: MonoBehaviour {
 	}
 
 	public Tile addTile(int x, int y, TileInfo ti) {
-		
-		int idx = y * parentMap.width + x;
-		if(!(idx >= 0 && idx <  this.tiles.Count)) {
-			return null;
-		}
 		this.removeTile(x, y);
 
 		GameObject obj = new GameObject();
@@ -87,18 +85,15 @@ public class TileLayer: MonoBehaviour {
 		t.Init(x, y, ti, sortingOrder, sortingLayer);
 		t.parentLayer = this;
 
-		this.tiles[idx] = obj;
+		this.tiles[y * parentMap.width + x] = obj;
 		return t;
 	}
 
 	public void removeTile(int x, int y) {
-		int idx = y * parentMap.width + x;
-		if(idx >= 0 && idx <  this.tiles.Count) {
-			GameObject t = this.tiles[idx];
-			if(t != null) { 
-				DestroyImmediate(t);
-				this.tiles[y * parentMap.width + x] = null;
-			}
+		GameObject t = this.tiles[y * parentMap.width + x];
+		if(t != null) { 
+			DestroyImmediate(t);
+			this.tiles[y * parentMap.width + x] = null;
 		}
 	}
 

@@ -7,20 +7,11 @@ public class PlayerController : MonoBehaviour {
 	private CharacterInfo characterInfo = null;
 	public TileMap tileMap;
 	private float tileDestEpsilon = 0.00005f;
-	public Occupation occupation = Occupation.BREAK;
 
-	int currentTileX, currentTileY;
-	int targetTileX, targetTileY;
-	int tileMoveX, tileMoveY;
+	public int lifeCount = 3;
 
-	public enum Occupation {
-		NONE = 0,
-		BREAK,
-		CLIMB,
-		FLOAT,
-		MOVE,
-		TUNNEL
-	}
+	public int currentTileX, currentTileY;
+	public int targetTileX, targetTileY;
 
 	void Start () {
 		characterInfo = playerCharacter.GetComponent<CharacterInfo>();
@@ -54,69 +45,34 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			playerCharacter.transform.Translate(0, distY, 0);
 		}
-
-		bool adjacentSpecial;
-		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
-		switch (occupation) {
-		case Occupation.BREAK:
-			if(frontTile.isBreakable) {
-				TileHolder.Instance.SwapInNewTile(0, currentTileX + tileMoveX, currentTileY + tileMoveY);
-			}
-				break;
-		case Occupation.CLIMB:
-			if(frontTile.isClimbable) {
-				
-			}
-				break;
-		case Occupation.FLOAT:
-			if(frontTile.isFloatable) {
-				
-			}
-				break;
-		case Occupation.MOVE:
-			if(frontTile.isMoveable) {
-				
-			}
-				break;
-		case Occupation.TUNNEL:
-			if(frontTile.isTunnelable) {
-				
-			}
-				break;
-		}
 	}
 	
 	private void CheckInput() {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
+			Debug.Log (Mathf.Abs(playerCharacter.transform.position.x - (tileMap.startPoint.x + targetTileX * tileMap.xStep) - tileMap.xStep / 2));
 			bool closeToDestination = Mathf.Abs(playerCharacter.transform.position.x - (tileMap.startPoint.x + targetTileX * tileMap.xStep) - tileMap.xStep / 2) < tileDestEpsilon &&
 				Mathf.Abs(playerCharacter.transform.position.y - (tileMap.startPoint.y + targetTileY * tileMap.yStep) - tileMap.yStep / 2) < tileDestEpsilon;
+
+			Animator animator = this.gameObject.GetComponent<Animator>();
 			if(targetTileY == currentTileY && closeToDestination) {
 				if(Input.GetAxis("Horizontal") < 0) {
 					tx = (int)Mathf.Clamp(currentTileX - 1, 0, 9999);
-					tileMoveX = 0;
+					animator.Play("skinless_walk_left");
 				} else if(Input.GetAxis("Horizontal") > 0) {
 					tx = (int)Mathf.Clamp(currentTileX + 1, 0, tileMap.width - 1);
-					tileMoveX = 0;
+					animator.Play("skinless_walk_right");
 				}
 			}
 			if (targetTileX == currentTileX && closeToDestination) {
 				if(Input.GetAxis("Vertical") > 0) {
 					ty = (int)Mathf.Clamp(currentTileY + 1, 0, 9999);
-					tileMoveY = 0;
+					animator.Play("skinless_walk_up");
 				} else if(Input.GetAxis("Vertical") < 0) {
 					ty = (int)Mathf.Clamp(currentTileY - 1, 0, tileMap.height - 1);
-					tileMoveY = 0;
+					animator.Play("skinless_walk");
 				}
 			}
-
-			if (targetTileX != currentTileX) {
-				tileMoveX = targetTileX - currentTileX;
-			}
-			if (targetTileY != currentTileY) {
-				tileMoveY = targetTileY - currentTileY;
-			}
-
 			Tile t = tileMap.getTile(tx, ty, 0);
 			if(!t.isBlock) {
 				targetTileX = tx;

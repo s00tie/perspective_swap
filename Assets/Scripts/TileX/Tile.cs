@@ -43,6 +43,9 @@ public class Tile: MonoBehaviour {
 	public bool isMoveable = false;
 	public bool isTunnelable = false;
 
+	public int astarScore = 0;
+	public Tile astarFrom = null;
+
 	bool _visible;
 	public bool visible {
 		get {
