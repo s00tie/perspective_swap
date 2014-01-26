@@ -11,14 +11,30 @@ public class CameraManager : MonoBehaviour {
 	private int targetIndex = 0;
 	private CharacterInfo oldTargetCharacter = null;
 	private bool readyToRetarget = true;
+	public TileMap tileMap;
 
 	void Start() {
 		mainCamera.enabled = true;
 		altCamera.enabled = false;
 		HideAltCamera();
+		mainCamera.transform.parent = CharacterManager.Instance.playerCharacter.transform;
+		mainCamera.transform.position = new Vector3(0, 0, -100);
 	}
 
 	void Update() {
+		if (mainCamera.transform.parent != CharacterManager.Instance.playerCharacter.transform)
+		{
+			mainCamera.transform.parent = CharacterManager.Instance.playerCharacter.transform;
+			mainCamera.transform.position = new Vector3(0, 0, -100);
+		}
+
+		Vector3 mainCameraPos = mainCamera.transform.position;
+		mainCameraPos.z = -100;
+		mainCamera.transform.position = mainCameraPos;
+		Vector3 altCameraPos = altCamera.transform.position;
+		altCameraPos.z = -100;
+		altCamera.transform.position = altCameraPos;
+
 		if (CharacterManager.Instance.nearbyCharacters.Count > 0) {
 			if (!showingAltCamera) {
 				/* TODO: should probably start at closest */
@@ -81,6 +97,7 @@ public class CameraManager : MonoBehaviour {
 		Vector3 cameraShift = targetCharacter.transform.position;
 		if (oldTargetCharacter != null) {
 			cameraShift -= oldTargetCharacter.transform.position;
+			cameraShift.z = 0;
 		}
 		oldTargetCharacter = targetCharacter;
 		altCamera.enabled = true;
@@ -91,11 +108,12 @@ public class CameraManager : MonoBehaviour {
 		altCameraViewport.x = altCameraX;
 		altCameraViewport.width = altCameraWidth;
 		altCamera.rect = altCameraViewport;
-		altCamera.transform.Translate(cameraShift);//(-altCamera.transform.position.x, -altCamera.transform.position.y, 0);// = new Vector3(0.0f, 0.0f, altCamera.transform.position.z);
+		altCamera.transform.Translate(cameraShift);
 		Rect mainCameraViewport = mainCamera.rect;
 		mainCameraViewport.width = mainSplitWidth;
 		mainCamera.rect = mainCameraViewport;
 		showingAltCamera = true;
+		tileMap.showLayerInGroupWithTag(targetCharacter.tag, 1, false);
 	}
 
 	public void HideAltCamera() {

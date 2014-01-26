@@ -142,14 +142,38 @@ public class TileMap: MonoBehaviour {
 	}
 
 	// shows layers with tag = tag in a group, hides all others
-	public void showLayerInGroupWithTag(string tag, int groupId) {
+	public void showLayerInGroupWithTag(string tag, int groupId, bool mainCamera = true) {
 		TileLayer[] layers = this.layers;
 		foreach(TileLayer layer in layers) {
+			layer.gameObject.layer = 10;
 			if(layer.layerGroup == groupId) {
 			    if(layer.layerTag == tag) {
-					layer.visible = true;
+					if (mainCamera) {
+						//layer.visible = true;
+						layer.gameObject.layer = LayerMask.NameToLayer("main_camera_render");;
+						foreach(Transform layerChild in layer.transform)
+						{
+							layerChild.gameObject.layer = LayerMask.NameToLayer("main_camera_render");
+						}
+					}else {
+						//layer.visible = false;
+						layer.gameObject.layer = LayerMask.NameToLayer("alt_camera_render");;
+						foreach(Transform layerChild in layer.transform)
+						{
+							layerChild.gameObject.layer = LayerMask.NameToLayer("alt_camera_render");
+						}
+					}
+
 				} else {
-					layer.visible = false;
+					layer.gameObject.layer = LayerMask.NameToLayer("no_camera_render");
+					foreach(Transform layerChild in layer.transform)
+					{
+						if (mainCamera && layer.gameObject.layer != LayerMask.NameToLayer("alt_camer_render")) {
+							layerChild.gameObject.layer = LayerMask.NameToLayer("no_camera_render");
+						} else if (!mainCamera &&mainCamera && layer.gameObject.layer != LayerMask.NameToLayer("main_camer_render")) {
+							layerChild.gameObject.layer = LayerMask.NameToLayer("no_camera_render");
+						}
+					}
 				}
 			}
 		}

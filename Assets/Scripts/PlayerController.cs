@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
 	public int tileMoveX, tileMoveY;
 	
 	void Start () {
+		playerCharacter = CharacterManager.Instance.playerCharacter.gameObject;
 		characterInfo = playerCharacter.GetComponent<CharacterInfo>();
 		if (characterInfo ==  null) {
 			enabled = false;
@@ -23,9 +24,12 @@ public class PlayerController : MonoBehaviour {
 			tileMap.getTileCoordinateAt(playerCharacter.transform.position, ref currentTileX, ref currentTileY);
 		targetTileX = currentTileX;
 		targetTileY = currentTileY;
+
+		tileMap.showLayerInGroupWithTag(CharacterManager.Instance.playerCharacter.tag, 1, true);
 	}
 
 	void Update () {
+		playerCharacter = CharacterManager.Instance.playerCharacter.gameObject;
 		CheckInput();
 	}
 
@@ -103,6 +107,7 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 			Tile t = tileMap.getTile(tx, ty, 0);
+			Tile ta = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
 			if(!t.isBlock) {
 				targetTileX = tx;
 				targetTileY = ty;

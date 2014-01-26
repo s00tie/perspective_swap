@@ -21,5 +21,10 @@ public class CharacterInfo : MonoBehaviour
 		TUNNEL
 	}
 	public Occupation occupation = Occupation.BREAK;
+
+	public void Start() {
+		if(tileMap != null)
+			tileMap.showLayerInGroupWithTag(this.tag, 1);
+	}
 }
 
