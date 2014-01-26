@@ -69,9 +69,11 @@ class TileMapInspector: Editor {
 
 			
 				TileMapEditor editor = TileMapEditor.Get ();
+				if(editor.selectedTileSetIndex != -1 &&
+			   		editor.selectedTileX != -1 && editor.selectedTileY != -1) {
 				Tileset ts = tm.tilesets[editor.selectedTileSetIndex];
 				TileInfo ti = ts.getTileInfo(editor.selectedTileX, editor.selectedTileY);
-
+				
 				EditorGUILayout.BeginHorizontal();
 				if(ti != null) {
 					if(GUILayout.Button("Fill with Current Tile", GUILayout.Width(200))) {
@@ -96,7 +98,7 @@ class TileMapInspector: Editor {
 								Tile t = layer.getTile(x, y);
 								Sprite tileSpr = t.GetComponent<SpriteRenderer>().sprite;
 								if(tileSpr.texture == markedSprite.texture &&
-							   		tileSpr.textureRect == markedSprite.textureRect) {
+								   tileSpr.textureRect == markedSprite.textureRect) {
 									t.gameObject.GetComponent<SpriteRenderer>().sprite = ti.sprite;
 								}
 							}
@@ -105,6 +107,10 @@ class TileMapInspector: Editor {
 					}
 				}
 				EditorGUILayout.EndHorizontal();
+
+				}
+
+				
 				
 				GUILayout.BeginHorizontal();
 
