@@ -176,6 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: .200000003
   shareRadius: 3
+  distanceFromCharacter: -1
 --- !u!23 &626910325
 Renderer:
   m_ObjectHideFlags: 0
@@ -453,6 +454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: .200000003
   shareRadius: 10
+  distanceFromCharacter: -1
 --- !u!1 &1810652582
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,3 +610,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: .200000003
   shareRadius: 3
+  distanceFromCharacter: -1

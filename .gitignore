@@ -7,3 +7,5 @@
 /Library/*
 /obj/*
 /Temp/*
+/ProjectSettings/Physics2DSettings.asset
+/ProjectSettings/EditorBuildSettings.asset
