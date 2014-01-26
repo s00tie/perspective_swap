@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour {
 		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, characterInfo.tileLayer);
 		if(characterInfo.interactionBubble != null)
 			characterInfo.interactionBubble.SetActive(false);
+		var distance1 = new Vector2( currentTileX - frontTile.x, currentTileY - frontTile.y);
+
 		switch (characterInfo.occupation) {
 		case CharacterInfo.Occupation.BREAK:
 			if(frontTile.isBreakable) {
@@ -56,7 +58,7 @@ public class PlayerController : MonoBehaviour {
 			break;
 		case CharacterInfo.Occupation.FLOAT:
 			if(frontTile.isFloatable) {
-				
+				playerCharacter.transform.Translate(distance1 * Time.deltaTime);
 			}
 			break;
 		case CharacterInfo.Occupation.MOVE:
