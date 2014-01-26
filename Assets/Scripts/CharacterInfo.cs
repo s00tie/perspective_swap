@@ -9,5 +9,15 @@ public class CharacterInfo : MonoBehaviour
 
 	public string tag = "";
 	public TileMap tileMap;
+
+	public enum Occupation {
+		NONE = 0,
+		BREAK,
+		CLIMB,
+		FLOAT,
+		MOVE,
+		TUNNEL
+	}
+	public Occupation occupation = Occupation.BREAK;
 }
 

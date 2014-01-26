@@ -9,10 +9,11 @@ public class PlayerController : MonoBehaviour {
 	private float tileDestEpsilon = 0.00005f;
 
 	public int lifeCount = 3;
-
+	
 	public int currentTileX, currentTileY;
 	public int targetTileX, targetTileY;
-
+	public int tileMoveX, tileMoveY;
+	
 	void Start () {
 		characterInfo = playerCharacter.GetComponent<CharacterInfo>();
 		if (characterInfo ==  null) {
@@ -45,14 +46,44 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			playerCharacter.transform.Translate(0, distY, 0);
 		}
-	}
 
+		bool adjacentSpecial;
+		Tile frontTile = tileMap.getTile(currentTileX + tileMoveX, currentTileY + tileMoveY, 0);
+		switch (characterInfo.occupation) {
+		case CharacterInfo.Occupation.BREAK:
+			if(frontTile.isBreakable) {
+				TileHolder.Instance.SwapInNewTile(0, currentTileX + tileMoveX, currentTileY + tileMoveY);
+			}
+			break;
+		case CharacterInfo.Occupation.CLIMB:
+			if(frontTile.isClimbable) {
+				
+			}
+			break;
+		case CharacterInfo.Occupation.FLOAT:
+			if(frontTile.isFloatable) {
+				
+			}
+			break;
+		case CharacterInfo.Occupation.MOVE:
+			if(frontTile.isMoveable) {
+				
+			}
+			break;
+		case CharacterInfo.Occupation.TUNNEL:
+			if(frontTile.isTunnelable) {
+				
+			}
+			break;
+		}
+	}
+	
 	private void CheckInput() {
 		if(tileMap != null)  {
 			int tx = targetTileX, ty = targetTileY;
 			bool closeToDestination = Mathf.Abs(playerCharacter.transform.position.x - (tileMap.startPoint.x + targetTileX * tileMap.xStep) - tileMap.xStep / 2) < tileDestEpsilon &&
 				Mathf.Abs(playerCharacter.transform.position.y - (tileMap.startPoint.y + targetTileY * tileMap.yStep) - tileMap.yStep / 2) < tileDestEpsilon;
-
+			
 			Animator animator = playerCharacter.GetComponent<Animator>();
 			if(targetTileY == currentTileY && closeToDestination) {
 				if(Input.GetAxis("Horizontal") < 0) {
