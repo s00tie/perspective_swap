@@ -68,40 +68,46 @@ class AIController: MonoBehaviour {
 		moveReady = true;
 	}
 	
-	void moveTo(Vector3 target_pos) {
-		Vector3 this_pos = characterInfo.gameObject.transform.position;
+	public static void MoveTo(Vector3 target_pos, float speed, GameObject go) {
+		Vector3 this_pos = go.transform.position;
 		float distX = target_pos.x - this_pos.x;
 		float distY = target_pos.y - this_pos.y;
-		float move_speed = characterInfo.moveSpeed * Time.deltaTime;
+		float move_speed = speed * Time.deltaTime;
 		
 		if(Mathf.Abs (distX) > move_speed) {
-			characterInfo.gameObject.transform.Translate(move_speed * Mathf.Sign(distX), 0, 0);
+			go.transform.Translate(move_speed * Mathf.Sign(distX), 0, 0);
 		} else {
-			characterInfo.gameObject.transform.Translate(distX, 0, 0);
+			go.transform.Translate(distX, 0, 0);
 		}
 		
 		if(Mathf.Abs (distY) > move_speed) {
-			characterInfo.gameObject.transform.Translate(0, move_speed * Mathf.Sign(distY), 0);
+			go.transform.Translate(0, move_speed * Mathf.Sign(distY), 0);
 		} else {
-			characterInfo.gameObject.transform.Translate(0, distY, 0);
+			go.transform.Translate(0, distY, 0);
 		}
 
 		string animName = "";
+		if(Mathf.Abs(distX) < 0.0000005f &&
+		   Mathf.Abs(distY) < 0.0000005f) {
+			return;
+			
+		}
+
 		if(Mathf.Abs (distX) > Mathf.Abs (distY)) {
 			if(distX < 0) {
-				animName = "skinless_walk_left";
+				animName = "walk_left";
 			} else {
-				animName = "skinless_walk_right";
+				animName = "walk_right";
 			}
 		} else {
 			if(distY < 0) {
-				animName = "skinless_walk_down";
+				animName = "walk_down";
 			} else {
-				animName = "skinless_walk_up";
+				animName = "walk_up";
 			}
 		}
 		if(animName.Length > 0) {
-			Animator animator = characterInfo.gameObject.GetComponent<Animator>();
+			Animator animator = go.GetComponent<Animator>();
 			if(animator != null) {
 				animator.StopPlayback();
 				animator.Play(animName);
@@ -113,14 +119,12 @@ class AIController: MonoBehaviour {
 		if(!moveReady) {
 			Vector3 pos = this.characterInfo.gameObject.transform.position;
 			if(!isClose (pos, targetPos)) {
-				this.moveTo(targetPos);
+				AIController.MoveTo(targetPos, characterInfo.moveSpeed, characterInfo.gameObject);
 			} else {
-				Debug.Log("next");
 				if(routePoints.Count > 0) {
 					targetPos = routePoints.Last();
 					routePoints.RemoveAt (routePoints.Count - 1);
 				} else {
-					Debug.Log("fin");
 					moveReady = true;
 				}
 
