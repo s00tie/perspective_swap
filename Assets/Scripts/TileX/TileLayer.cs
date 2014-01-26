@@ -12,7 +12,7 @@ public enum LayerType {
 public class TileLayer: MonoBehaviour {
 
 	public LayerType layerType;
-	public TileMap   parentMap;
+	public TileMap   parentMap; 
 	public string    name = "New Layer";
 
 	public int sortingOrder = 0;
