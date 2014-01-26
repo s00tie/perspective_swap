@@ -7,8 +7,10 @@ public class PlayerController : MonoBehaviour {
 	private CharacterInfo characterInfo = null;
 	public TileMap tileMap;
 
-	int currentTileX, currentTileY;
-	int targetTileX, targetTileY;
+	public int lifeCount = 3;
+
+	public int currentTileX, currentTileY;
+	public int targetTileX, targetTileY;
 
 	void Start () {
 		characterInfo = playerCharacter.GetComponent<CharacterInfo>();
